@@ -83,7 +83,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       DesignSize = (
         1012
         97)
-      object TotalLabel: TLabel
+      object lblTotal: TLabel
         Left = 19
         Top = 24
         Width = 120
@@ -96,7 +96,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
         Font.Style = []
         ParentFont = False
       end
-      object TotalValor: TLabel
+      object lblTotalValor: TLabel
         Left = 145
         Top = 24
         Width = 58
@@ -515,6 +515,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
               00000809030303030303030303030303030A0000000000000000000000000000
               0000000001020304030303030506070100000000000000000000}
             TabOrder = 5
+            OnClick = btnAdicionarItemClick
           end
         end
         object pnlItensContent: TPanel
@@ -531,6 +532,8 @@ object FrmPedidoVenda: TFrmPedidoVenda
             Width = 984
             Height = 200
             Align = alClient
+            DataSource = dsItensPedido
+            Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
             TitleFont.Color = clWindowText
@@ -540,37 +543,101 @@ object FrmPedidoVenda: TFrmPedidoVenda
             Columns = <
               item
                 Expanded = False
-                FieldName = 'C'#243'digo'
+                FieldName = 'codigo'
+                Title.Caption = 'C'#243'digo'
                 Width = 60
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'Descri'#231#227'o'
+                FieldName = 'descricao'
+                Title.Caption = 'Descri'#231#227'o'
                 Width = 542
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'Quantidade'
+                FieldName = 'quantidade'
+                Title.Caption = 'Quantidade'
                 Width = 95
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'Valor Unit'#225'rio'
+                FieldName = 'valorUnitario'
+                Title.Caption = 'Valor Unit'#225'rio'
                 Width = 112
                 Visible = True
               end
               item
                 Expanded = False
-                FieldName = 'Valor Total'
+                FieldName = 'valorTotal'
+                Title.Caption = 'Valor Total'
                 Width = 88
                 Visible = True
               end>
           end
         end
       end
+    end
+  end
+  object dsItensPedido: TDataSource
+    DataSet = cdsItensPedido
+    Left = 46
+    Top = 453
+  end
+  object cdsItensPedido: TClientDataSet
+    PersistDataPacket.Data = {
+      AB0000009619E0BD010000001800000005000000000003000000AB0006636F64
+      69676F04000100000000000964657363726963616F0200490000000100055749
+      445448020002002C010A7175616E74696461646504000100000000000D76616C
+      6F72556E69746172696F08000400000001000753554254595045020049000600
+      4D6F6E6579000A76616C6F72546F74616C080004000000010007535542545950
+      450200490006004D6F6E6579000000}
+    Active = True
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'codigo'
+        DataType = ftInteger
+      end
+      item
+        Name = 'descricao'
+        DataType = ftString
+        Size = 300
+      end
+      item
+        Name = 'quantidade'
+        DataType = ftInteger
+      end
+      item
+        Name = 'valorUnitario'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'valorTotal'
+        DataType = ftCurrency
+      end>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 142
+    Top = 453
+    object cdsItensPedidoCodigo: TIntegerField
+      FieldName = 'codigo'
+    end
+    object cdsItensPedidoDescricao: TStringField
+      FieldName = 'descricao'
+      Size = 300
+    end
+    object cdsItensPedidoQuantidade: TIntegerField
+      FieldName = 'quantidade'
+    end
+    object cdsItensPedidoValorUnitario: TCurrencyField
+      FieldName = 'valorUnitario'
+    end
+    object cdsItensPedidoValorTotal: TCurrencyField
+      FieldName = 'valorTotal'
     end
   end
 end
