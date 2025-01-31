@@ -141,6 +141,16 @@
             <Form>FrmPedidoVenda</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="View\Selecao.pas">
+            <Form>FrmSelecao</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Controller\ClienteController.pas"/>
+        <DCCReference Include="Classes\SalesSoftUtils.pas"/>
+        <DCCReference Include="Model\SelecaoModel.pas"/>
+        <DCCReference Include="Controller\SelecaoController.pas"/>
+        <DCCReference Include="Controller\PedidoVendaController.pas"/>
+        <DCCReference Include="Controller\ProdutoController.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

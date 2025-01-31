@@ -8,7 +8,14 @@ uses
   ProdutoModel in 'Model\ProdutoModel.pas',
   PedidoModel in 'Model\PedidoModel.pas',
   ItemPedidoModel in 'Model\ItemPedidoModel.pas',
-  PedidoVenda in 'View\PedidoVenda.pas' {FrmPedidoVenda};
+  PedidoVenda in 'View\PedidoVenda.pas' {FrmPedidoVenda},
+  Selecao in 'View\Selecao.pas' {FrmSelecao},
+  ClienteController in 'Controller\ClienteController.pas',
+  SalesSoftUtils in 'Classes\SalesSoftUtils.pas',
+  SelecaoModel in 'Model\SelecaoModel.pas',
+  SelecaoController in 'Controller\SelecaoController.pas',
+  PedidoVendaController in 'Controller\PedidoVendaController.pas',
+  ProdutoController in 'Controller\ProdutoController.pas';
 
 {$R *.res}
 

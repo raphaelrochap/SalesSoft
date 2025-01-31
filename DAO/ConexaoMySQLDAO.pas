@@ -3,7 +3,7 @@ unit ConexaoMySQLDAO;
 interface
 
 uses
-  System.UITypes, FireDAC.Comp.Client, SysUtils, Dialogs, FireDac.Stan.Def, FireDAC.DApt, FireDAC.Comp.UI;
+  System.UITypes, FireDAC.Comp.Client, SysUtils, Vcl.Dialogs, FireDac.Stan.Def, FireDAC.DApt, FireDAC.Comp.UI;
 
 type
   TConexaoMySQLDAO = class
@@ -15,6 +15,9 @@ type
     FConexaoPrincipal: TFDConnection;
 
     function ConectarAoBancoDeDados(): Boolean;
+    procedure StartTransaction();
+    procedure Commit();
+    procedure Rollback(pMessage: String = '');
     class function GetInstance(): TConexaoMySQLDAO;
   end;
 
@@ -29,6 +32,25 @@ begin
     FConexaoMySQLDAO := TConexaoMySQLDAO.Create();
 
   Result := FConexaoMySQLDAO;
+end;
+
+procedure TConexaoMySQLDAO.StartTransaction();
+begin
+  FConexaoPrincipal.StartTransaction();
+end;
+
+procedure TConexaoMySQLDAO.Commit();
+begin
+  FConexaoPrincipal.Commit();
+end;
+
+procedure TConexaoMySQLDAO.Rollback(pMessage: String = '');
+begin
+  if pMessage = '' then
+    pMessage := 'Houve um problema com sua última transação de dados, por favor verifique sua conexão com o Banco de Dados e tente novamente';
+
+  FConexaoPrincipal.Rollback();
+  MessageDlg(pMessage, mtInformation, [mbOk], 0);
 end;
 
 function TConexaoMySQLDAO.ConectarAoBancoDeDados(): Boolean;

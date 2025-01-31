@@ -1,7 +1,7 @@
 object FrmPedidoVenda: TFrmPedidoVenda
   Left = 339
   Top = 213
-  Caption = 'FrmPedidoVenda'
+  Caption = 'Pedido de Venda'
   ClientHeight = 620
   ClientWidth = 1012
   Color = clBtnFace
@@ -12,6 +12,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
   Font.Style = []
   Position = poMainFormCenter
   StyleName = 'Windows'
+  OnCreate = FormCreate
   TextHeight = 15
   object pnlHeader: TPanel
     Left = 0
@@ -85,7 +86,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
         97)
       object lblTotal: TLabel
         Left = 19
-        Top = 24
+        Top = 16
         Width = 120
         Height = 45
         Caption = 'Total: R$'
@@ -98,7 +99,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       end
       object lblTotalValor: TLabel
         Left = 145
-        Top = 24
+        Top = 16
         Width = 58
         Height = 45
         Caption = '0,00'
@@ -110,8 +111,8 @@ object FrmPedidoVenda: TFrmPedidoVenda
         ParentFont = False
       end
       object btnGravarPedido: TButton
-        Left = 872
-        Top = 6
+        Left = 865
+        Top = 2
         Width = 130
         Height = 83
         Anchors = [akTop, akRight]
@@ -208,8 +209,8 @@ object FrmPedidoVenda: TFrmPedidoVenda
           222323242526272829000000000000000000000012131415161718191A1B0607
           1C000000000000000000000000090A0B0C0D0E0F060610110000000000000000
           0000000000000102030405060708000000000000000000000000}
-        TabOrder = 0
-        TabStop = False
+        TabOrder = 1
+        OnClick = btnPesquisarClienteClick
       end
       object edtCodigoCliente: TEdit
         Left = 20
@@ -222,7 +223,8 @@ object FrmPedidoVenda: TFrmPedidoVenda
         Font.Name = 'Roboto'
         Font.Style = []
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 0
+        OnExit = edtCodigoClienteExit
       end
       object edtNomeCliente: TEdit
         Left = 139
@@ -267,6 +269,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
         Tabs.Strings = (
           'Itens do pedido')
         TabIndex = 0
+        TabStop = False
         object pnlItensHeader: TPanel
           Left = 4
           Top = 32
@@ -334,6 +337,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             Font.Style = []
             ParentFont = False
             TabOrder = 0
+            OnExit = edtCodigoProdutoExit
           end
           object btnPesquisarProduto: TBitBtn
             Left = 82
@@ -394,7 +398,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
               1C000000000000000000000000090A0B0C0D0E0F060610110000000000000000
               0000000000000102030405060708000000000000000000000000}
             TabOrder = 1
-            TabStop = False
+            OnClick = btnPesquisarProdutoClick
           end
           object edtDescricaoProduto: TEdit
             Left = 135
@@ -424,6 +428,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             Font.Height = -19
             Font.Name = 'Roboto'
             Font.Style = []
+            NumbersOnly = True
             ParentFont = False
             TabOrder = 3
           end
@@ -440,6 +445,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             Font.Style = []
             ParentFont = False
             TabOrder = 4
+            OnKeyPress = edtValorUnitarioKeyPress
           end
           object btnAdicionarItem: TBitBtn
             Left = 939
