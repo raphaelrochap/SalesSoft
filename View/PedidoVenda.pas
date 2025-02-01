@@ -86,7 +86,7 @@ procedure TFrmPedidoVenda.btnAdicionarEditarItemClick(Sender: TObject);
 begin
   if not CamposValidos() then
   begin
-    MessageDlg('É necessário que todos os campos estejam devidamente preenchidos.', mtInformation, [mbOK], 0);
+    MessageDlg('ï¿½ necessï¿½rio que todos os campos estejam devidamente preenchidos.', mtInformation, [mbOK], 0);
     Exit;
   end;
 
@@ -121,6 +121,9 @@ begin
 
   edtCodigoCliente.Text := lCodigoTratado;
   edtNomeCliente.Text := FClienteSelecionado.Nome;
+
+  btnVerPedidos.Enabled := FClienteSelecionado.Codigo = -1;
+  btnCancelarPedido.Enabled := FClienteSelecionado.Codigo = -1;
 end;
 
 procedure TFrmPedidoVenda.SetarValoresCamposProduto();
@@ -170,19 +173,41 @@ begin
 end;
 
 procedure TFrmPedidoVenda.edtCodigoClienteExit(Sender: TObject);
+const
+  MENSAGEM = 'Ao remover o cliente, vocï¿½ estï¿½ cancelando o lanï¿½amento deste pedido e todos os itens incluï¿½dos abaixo serï¿½o retirados da tabela.' + TSalesSoftUtils.CRLF
+    + TSalesSoftUtils.CRLF + 'Deseja prosseguir?';
 var
   lPedidoVendaController: TPedidoVendaController;
 begin
   if ((FClienteSelecionado.Codigo = -1) and (edtCodigoCliente.Text = '')) then
-    exit;
+    Exit;
 
-  lPedidoVendaController := TPedidoVendaController.Create();
-  try
-    FClienteSelecionado := lPedidoVendaController.PesquisaERetornaClientePorCodigo(StrToIntDef(edtCodigoCliente.Text, -1));
-    SetarValoresCamposCliente();
-  finally
-    lPedidoVendaController.Free();
-  end;
+  if ((FClienteSelecionado.Codigo <> -1) and (edtCodigoCliente.Text = '')) then
+    begin
+      if (MessageDlg(MENSAGEM, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrYes) then
+      begin
+        FClienteSelecionado := TSelecaoModel.ModeloZerado();
+        FProdutoSelecionado := TSelecaoModel.ModeloZerado();
+        SetarValoresCamposCliente();
+        SetarValoresCamposProduto();
+        cdsItensPedido.EmptyDataSet();
+        AtualizarPrecoTotal();
+
+        TSalesSoftUtils.SetarFoco(edtCodigoCliente);
+      end
+      else
+        edtCodigoCliente.Text := IntToStr(FClienteSelecionado.Codigo);
+    end
+  else
+    begin
+      lPedidoVendaController := TPedidoVendaController.Create();
+      try
+        FClienteSelecionado := lPedidoVendaController.PesquisaERetornaClientePorCodigo(StrToIntDef(edtCodigoCliente.Text, -1));
+        SetarValoresCamposCliente();
+      finally
+        lPedidoVendaController.Free();
+      end;
+    end;
 end;
 
 procedure TFrmPedidoVenda.edtCodigoProdutoExit(Sender: TObject);
@@ -259,8 +284,8 @@ end;
 
 procedure TFrmPedidoVenda.ValidaRemocaoDeItemDoCarrinho(Key: Word);
 const
-  MENSAGEM = 'Produto: %d - %s' + TSalesSoftUtils.CRLF + 'Quantidade: %d' + TSalesSoftUtils.CRLF + 'Valor Unitário: R$ %f' + TSalesSoftUtils.CRLF + 'Valor Total: R$ %f'
-    + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Você tem certeza que quer remover esse item do pedido?';
+  MENSAGEM = 'Produto: %d - %s' + TSalesSoftUtils.CRLF + 'Quantidade: %d' + TSalesSoftUtils.CRLF + 'Valor Unitï¿½rio: R$ %f' + TSalesSoftUtils.CRLF + 'Valor Total: R$ %f'
+    + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Vocï¿½ tem certeza que quer remover esse item do pedido?';
 var
   lDescricao: AnsiString;
   lCodigo, lQuantidade: Integer;
@@ -273,9 +298,9 @@ begin
   lValorTotal := cdsItensPedidoValorTotal.Value;
 
   if (Key = VK_DELETE) and
-    (MessageDlg(Format(MENSAGEM, [lCodigo, lDescricao, lQuantidade, lValorUnitario, lValorTotal
-    ]), mtInformation, [mbYes, mbNo], 0, mbNo) = mrYes) then
-      cdsItensPedido.Delete();
+    (MessageDlg(Format(MENSAGEM, [lCodigo, lDescricao, lQuantidade, lValorUnitario, lValorTotal]), mtInformation, [mbYes, mbNo], 0, mbNo) = mrYes)
+  then
+    cdsItensPedido.Delete();
 end;
 
 procedure TFrmPedidoVenda.grdItensPedidoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -311,7 +336,7 @@ begin
   else if (cdsItensPedido.RecordCount = 0) then
     begin
       FTotal := 0;
-      lblTotal.Caption := Format('Total: R$ %s', [FormatFloat('0.00', FTotal)]);
+      lblTotalValor.Caption := FormatFloat('#,##0.00', FTotal);
     end;
 end;
 
