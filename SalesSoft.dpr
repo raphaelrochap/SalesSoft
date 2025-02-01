@@ -15,13 +15,15 @@ uses
   SelecaoModel in 'Model\SelecaoModel.pas',
   SelecaoController in 'Controller\SelecaoController.pas',
   PedidoVendaController in 'Controller\PedidoVendaController.pas',
-  ProdutoController in 'Controller\ProdutoController.pas';
+  ProdutoController in 'Controller\ProdutoController.pas',
+  TelaPrincipalController in 'Controller\TelaPrincipalController.pas',
+  ConexaoMySQLModel in 'Model\ConexaoMySQLModel.pas';
 
 {$R *.res}
 
 function ConectouAoBancoDeDados(): Boolean;
 begin
-  Result := FConexaoMySQLDAO.ConectarAoBancoDeDados();
+  Result := TTelaPrincipalController.ConectarAoBancoDeDados();
 end;
 
 begin

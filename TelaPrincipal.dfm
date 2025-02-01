@@ -824,20 +824,4 @@ object FrmTelaPrincipal: TFrmTelaPrincipal
     TabOrder = 0
     OnClick = btnPedidoVendaClick
   end
-  object FDConnection: TFDConnection
-    Params.Strings = (
-      'DriverID=MySQL'
-      'Database=salessoft'
-      'Password=root'
-      'Server=localhost'
-      'User_Name=root')
-    LoginPrompt = False
-    Left = 64
-    Top = 16
-  end
-  object FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink
-    VendorLib = 'C:\Users\User\Desktop\Projetos\github\SalesSoft\LIBMYSQL.DLL'
-    Left = 64
-    Top = 80
-  end
 end

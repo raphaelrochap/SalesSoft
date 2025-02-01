@@ -12,8 +12,6 @@ uses
 
 type
   TFrmTelaPrincipal = class(TForm)
-    FDConnection: TFDConnection;
-    FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink;
     imgLogo: TImage;
     btnPedidoVenda: TButton;
     procedure btnPedidoVendaClick(Sender: TObject);

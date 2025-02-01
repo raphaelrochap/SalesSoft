@@ -151,6 +151,8 @@
         <DCCReference Include="Controller\SelecaoController.pas"/>
         <DCCReference Include="Controller\PedidoVendaController.pas"/>
         <DCCReference Include="Controller\ProdutoController.pas"/>
+        <DCCReference Include="Controller\TelaPrincipalController.pas"/>
+        <DCCReference Include="Model\ConexaoMySQLModel.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

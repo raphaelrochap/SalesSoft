@@ -3,28 +3,36 @@ unit ConexaoMySQLDAO;
 interface
 
 uses
-  System.UITypes, FireDAC.Comp.Client, SysUtils, Vcl.Dialogs, FireDac.Stan.Def, FireDAC.DApt, FireDAC.Comp.UI, SalesSoftUtils;
+  System.UITypes, FireDAC.Comp.Client, SysUtils, Vcl.Dialogs, FireDac.Stan.Def, FireDAC.DApt, FireDAC.Comp.UI, SalesSoftUtils, ConexaoMySQLModel, FireDAC.Phys.MySQL;
 
 type
   TConexaoMySQLDAO = class
   private
     {$hints off}
-    waitCursor: TFDGUIxWaitCursor;
+    FFDGUIxWaitCursor: TFDGUIxWaitCursor;
     {$hints on}
   public
     FConexaoPrincipal: TFDConnection;
+    FFDPhysMySQLDriverLink: TFDPhysMySQLDriverLink;
 
-    function ConectarAoBancoDeDados(): Boolean;
+    function ConectarAoBancoDeDados(pModeloConexao: TConexaoMySQLModel): Boolean;
     procedure StartTransaction();
     procedure Commit();
     procedure Rollback(pMessage: String = '');
     class function GetInstance(): TConexaoMySQLDAO;
+    constructor Create();
   end;
 
 var
   FConexaoMySQLDAO: TConexaoMySQLDAO;
 
 implementation
+
+constructor TConexaoMySQLDAO.Create();
+begin
+  FFDPhysMySQLDriverLink := TFDPhysMySQLDriverLink.Create(nil);
+  FFDGUIxWaitCursor := TFDGUIxWaitCursor.Create(nil);
+end;
 
 class function TConexaoMySQLDAO.GetInstance(): TConexaoMySQLDAO;
 begin
@@ -53,7 +61,7 @@ begin
   MessageDlg(pMessage, mtInformation, [mbOk], 0);
 end;
 
-function TConexaoMySQLDAO.ConectarAoBancoDeDados(): Boolean;
+function TConexaoMySQLDAO.ConectarAoBancoDeDados(pModeloConexao: TConexaoMySQLModel): Boolean;
 begin
   Result := False;
 
@@ -61,9 +69,12 @@ begin
     FConexaoPrincipal := TFDConnection.Create(nil);
 
     FConexaoPrincipal.DriverName := 'MySQL';
-    FConexaoPrincipal.Params.Database := 'salessoft';
-    FConexaoPrincipal.Params.UserName := 'root';
-    FConexaoPrincipal.Params.Password := 'root';
+    FConexaoPrincipal.Params.Database := pModeloConexao.Database;
+    FConexaoPrincipal.Params.UserName := pModeloConexao.Username;
+    FConexaoPrincipal.Params.Password := pModeloConexao.Password;
+    FConexaoPrincipal.Params.AddPair('Server', pModeloConexao.Server);
+    FConexaoPrincipal.Params.AddPair('Port', pModeloConexao.Port);
+    FFDPhysMySQLDriverLink.VendorLib := pModeloConexao.CaminhoLib;
 
     FConexaoPrincipal.Connected := True;
 
