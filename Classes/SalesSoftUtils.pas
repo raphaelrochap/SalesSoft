@@ -9,6 +9,7 @@ type
   TSalesSoftUtils = class
   private
   public
+      const CRLF = #13#10;
       class procedure SetarFoco(pComponente: TWinControl);
       class function IIF(condicao: Boolean; value1, value2: Variant): Variant;
   end;

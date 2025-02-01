@@ -35,7 +35,7 @@ type
     lblQuantidade: TLabel;
     edtValorUnitario: TEdit;
     lblValorUnitario: TLabel;
-    btnAdicionarItem: TBitBtn;
+    btnAdicionarEditarItem: TBitBtn;
     grdItensPedido: TDBGrid;
     dsItensPedido: TDataSource;
     cdsItensPedido: TClientDataSet;
@@ -44,15 +44,17 @@ type
     cdsItensPedidoQuantidade: TIntegerField;
     cdsItensPedidoValorUnitario: TCurrencyField;
     cdsItensPedidoValorTotal: TCurrencyField;
-    procedure btnAdicionarItemClick(Sender: TObject);
+    procedure btnAdicionarEditarItemClick(Sender: TObject);
     procedure btnPesquisarClienteClick(Sender: TObject);
     procedure edtCodigoClienteExit(Sender: TObject);
     procedure btnPesquisarProdutoClick(Sender: TObject);
     procedure edtCodigoProdutoExit(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure edtValorUnitarioKeyPress(Sender: TObject; var Key: Char);
+    procedure grdItensPedidoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     FTotal: Double;
+    FItensInsercao: Boolean;
     FClienteSelecionado: TSelecaoModel;
     FProdutoSelecionado: TSelecaoModel;
 
@@ -60,6 +62,9 @@ type
     procedure SetarValoresCamposCliente();
     procedure SetarValoresCamposProduto();
     procedure LimparDadosProduto();
+    procedure ValidaRemocaoDeItemDoCarrinho(Key: Word);
+    procedure ValidaEdicaoDeItemDoCarrinho(Key: Word);
+    procedure SetarCamposItensComo(pVisibilidade: Boolean);
     function CamposValidos(): Boolean;
   public
     { Public declarations }
@@ -77,24 +82,35 @@ begin
   Result := (edtCodigoCliente.Text <> '') and (edtCodigoProduto.Text <> '') and (edtQuantidade.Text <> '') and (edtValorUnitario.Text <> '');
 end;
 
-procedure TFrmPedidoVenda.btnAdicionarItemClick(Sender: TObject);
+procedure TFrmPedidoVenda.btnAdicionarEditarItemClick(Sender: TObject);
 begin
   if not CamposValidos() then
   begin
-    MessageDlg('Certifique-se de que todos os campos estão devidamente preenchidos.', mtInformation, [mbOK], 0);
+    MessageDlg('É necessário que todos os campos estejam devidamente preenchidos.', mtInformation, [mbOK], 0);
     Exit;
   end;
 
-  cdsItensPedido.Append();
+  if FItensInsercao then
+    begin
+      cdsItensPedido.Append()
+    end
+  else
+    begin
+      cdsItensPedido.Edit();
+      SetarCamposItensComo(True);
+    end;
+
   cdsItensPedidoCodigo.Value := StrToInt(edtCodigoProduto.Text);
   cdsItensPedidoDescricao.AsString := edtDescricaoProduto.Text;
   cdsItensPedidoQuantidade.Value := StrToInt(edtQuantidade.Text);
   cdsItensPedidoValorUnitario.Value := StrToFloat(edtValorUnitario.Text);
   cdsItensPedidoValorTotal.Value := StrToInt(edtQuantidade.Text) * StrToFloat(edtValorUnitario.Text);
+
   cdsItensPedido.Post();
 
   AtualizarPrecoTotal();
   LimparDadosProduto();
+  btnAdicionarEditarItem.Glyph.LoadFromResourceName(HInstance, 'ADDICON');
 end;
 
 procedure TFrmPedidoVenda.SetarValoresCamposCliente();
@@ -210,8 +226,62 @@ end;
 
 procedure TFrmPedidoVenda.FormCreate(Sender: TObject);
 begin
+  FItensInsercao := True;
   FClienteSelecionado := TSelecaoModel.ModeloZerado();
   FProdutoSelecionado := TSelecaoModel.ModeloZerado();
+end;
+
+procedure TFrmPedidoVenda.SetarCamposItensComo(pVisibilidade: Boolean);
+begin
+  FItensInsercao := pVisibilidade;
+  grdItensPedido.Enabled := pVisibilidade;
+  edtCodigoProduto.Enabled:= pVisibilidade;
+  btnPesquisarProduto.Enabled := pVisibilidade;
+end;
+
+procedure TFrmPedidoVenda.ValidaEdicaoDeItemDoCarrinho(Key: Word);
+begin
+  if (Key = VK_RETURN) then
+  begin
+    SetarCamposItensComo(False);
+
+    cdsItensPedido.DisableControls();
+    edtCodigoProduto.Text := IntToStr(cdsItensPedidoCodigo.Value);
+    edtDescricaoProduto.Text := cdsItensPedidoDescricao.AsString;
+    edtQuantidade.Text := IntToStr(cdsItensPedidoQuantidade.Value);
+    edtValorUnitario.Text := FloatToStr(cdsItensPedidoValorUnitario.Value);
+    cdsItensPedido.EnableControls();
+
+    btnAdicionarEditarItem.Glyph.LoadFromResourceName(HInstance, 'EDITICON');
+    TSalesSoftUtils.SetarFoco(edtQuantidade);
+  end;
+end;
+
+procedure TFrmPedidoVenda.ValidaRemocaoDeItemDoCarrinho(Key: Word);
+const
+  MENSAGEM = 'Produto: %d - %s' + TSalesSoftUtils.CRLF + 'Quantidade: %d' + TSalesSoftUtils.CRLF + 'Valor Unitário: R$ %f' + TSalesSoftUtils.CRLF + 'Valor Total: R$ %f'
+    + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Você tem certeza que quer remover esse item do pedido?';
+var
+  lDescricao: AnsiString;
+  lCodigo, lQuantidade: Integer;
+  lValorUnitario, lValorTotal: Double;
+begin
+  lCodigo := cdsItensPedidoCodigo.Value;
+  lDescricao := cdsItensPedidoDescricao.Value;
+  lQuantidade := cdsItensPedidoQuantidade.Value;
+  lValorUnitario := cdsItensPedidoValorUnitario.Value;
+  lValorTotal := cdsItensPedidoValorTotal.Value;
+
+  if (Key = VK_DELETE) and
+    (MessageDlg(Format(MENSAGEM, [lCodigo, lDescricao, lQuantidade, lValorUnitario, lValorTotal
+    ]), mtInformation, [mbYes, mbNo], 0, mbNo) = mrYes) then
+      cdsItensPedido.Delete();
+end;
+
+procedure TFrmPedidoVenda.grdItensPedidoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  ValidaRemocaoDeItemDoCarrinho(Key);
+  ValidaEdicaoDeItemDoCarrinho(Key);
 end;
 
 procedure TFrmPedidoVenda.AtualizarPrecoTotal();

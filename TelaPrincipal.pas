@@ -28,6 +28,7 @@ var
 
 implementation
 
+{$R icone.res}
 {$R *.dfm}
 
 procedure TFrmTelaPrincipal.btnPedidoVendaClick(Sender: TObject);

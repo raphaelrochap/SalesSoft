@@ -24,7 +24,7 @@ begin
   if TFrmSelecao.ExibirTelaDeSelecao(pDsClientes, 'clientes') = mrOK then
   begin
     lCliente.Codigo := pDsClientes.fields.FieldByName('codigo').AsInteger;
-    lCliente.Nome := pDsClientes.fields.FieldByName('nome').AsString;
+    lCliente.Nome := pDsClientes.fields.FieldByName('descricao').AsString;
   end;
 
   Result := lCliente;

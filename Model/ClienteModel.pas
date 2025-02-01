@@ -25,7 +25,7 @@ implementation
 
 class function TClienteModel.GetAll(): TFDQuery;
 const
-   QUERY = 'SELECT CODIGO, NOME FROM CLIENTES';
+   QUERY = 'SELECT CODIGO, NOME AS DESCRICAO FROM CLIENTES';
 begin
   Result := TFDQuery.Create(nil);
   try

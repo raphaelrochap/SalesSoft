@@ -27,6 +27,8 @@ object FrmSelecao: TFrmSelecao
     BorderWidth = 10
     ParentBackground = False
     TabOrder = 0
+    ExplicitWidth = 542
+    ExplicitHeight = 654
     object GridSelecao: TDBGrid
       Left = 10
       Top = 10
@@ -59,7 +61,7 @@ object FrmSelecao: TFrmSelecao
           Expanded = False
           FieldName = 'descricao'
           Title.Caption = 'Descri'#231#227'o'
-          Width = 89
+          Width = 376
           Visible = True
         end>
     end

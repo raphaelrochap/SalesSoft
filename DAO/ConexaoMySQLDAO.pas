@@ -3,7 +3,7 @@ unit ConexaoMySQLDAO;
 interface
 
 uses
-  System.UITypes, FireDAC.Comp.Client, SysUtils, Vcl.Dialogs, FireDac.Stan.Def, FireDAC.DApt, FireDAC.Comp.UI;
+  System.UITypes, FireDAC.Comp.Client, SysUtils, Vcl.Dialogs, FireDac.Stan.Def, FireDAC.DApt, FireDAC.Comp.UI, SalesSoftUtils;
 
 type
   TConexaoMySQLDAO = class
@@ -71,7 +71,7 @@ begin
   except
     on E: Exception do
     begin
-      MessageDlg('Não foi possível realizar a conexão com a base de Dados:' + #10#13 + #10#13 + 'Detalhes:' + E.Message, mtInformation, [mbOK], 0);
+      MessageDlg('Não foi possível realizar a conexão com a base de Dados:' + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Detalhes:' + E.Message, mtInformation, [mbOK], 0);
     end;
   end;
 end;

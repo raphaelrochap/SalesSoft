@@ -51,7 +51,7 @@ begin
     if lDsClientes.Locate('codigo', pCodigo) then
       begin
         Result.Codigo := lDsClientes.fields.FieldByName('codigo').AsInteger;
-        Result.Nome := lDsClientes.fields.FieldByName('nome').AsString;
+        Result.Nome := lDsClientes.fields.FieldByName('descricao').AsString;
       end
     else
       ShowMessage('Não foi encontrado um Cliente com esse código.');
