@@ -17,7 +17,10 @@ uses
   PedidoVendaController in 'Controller\PedidoVendaController.pas',
   ProdutoController in 'Controller\ProdutoController.pas',
   TelaPrincipalController in 'Controller\TelaPrincipalController.pas',
-  ConexaoMySQLModel in 'Model\ConexaoMySQLModel.pas';
+  ConexaoMySQLModel in 'Model\ConexaoMySQLModel.pas',
+  BaseModel in 'Model\BaseModel.pas',
+  PedidoController in 'Controller\PedidoController.pas',
+  ItemPedidoController in 'Controller\ItemPedidoController.pas';
 
 {$R *.res}
 

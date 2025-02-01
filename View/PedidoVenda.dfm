@@ -124,6 +124,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        OnClick = btnGravarPedidoClick
       end
     end
     object pnlCliente: TPanel

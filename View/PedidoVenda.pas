@@ -1,11 +1,11 @@
-unit PedidoVenda;
+﻿unit PedidoVenda;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.StdCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, Datasnap.DBClient, FireDAC.Comp.Client, Selecao, ClienteController, SalesSoftUtils, PedidoVendaController,
-  SelecaoModel, UITypes, Vcl.Mask, Vcl.Samples.Spin;
+  SelecaoModel, UITypes, Vcl.Mask, Vcl.Samples.Spin, PedidoController, ItemPedidoController, ConexaoMySQLDAO;
 
 type
   TFrmPedidoVenda = class(TForm)
@@ -52,6 +52,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure edtValorUnitarioKeyPress(Sender: TObject; var Key: Char);
     procedure grdItensPedidoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnGravarPedidoClick(Sender: TObject);
   private
     FTotal: Double;
     FItensInsercao: Boolean;
@@ -65,6 +66,9 @@ type
     procedure ValidaRemocaoDeItemDoCarrinho(Key: Word);
     procedure ValidaEdicaoDeItemDoCarrinho(Key: Word);
     procedure SetarCamposItensComo(pVisibilidade: Boolean);
+    function GravarPedidoERetornarID(): Integer;
+    function GravarItensDoPedido(pCodigoPedido: Integer): Boolean;
+    procedure LimparDadosDaTela();
     function CamposValidos(): Boolean;
   public
     { Public declarations }
@@ -111,6 +115,68 @@ begin
   AtualizarPrecoTotal();
   LimparDadosProduto();
   btnAdicionarEditarItem.Glyph.LoadFromResourceName(HInstance, 'ADDICON');
+end;
+
+function TFrmPedidoVenda.GravarPedidoERetornarID(): Integer;
+var
+  lPedidoController: TPedidoController;
+    lSalvou: Boolean;
+begin
+  lPedidoController := TPedidoController.Create();
+  Result := -1;
+  try
+    lSalvou := lPedidoController.Salvar(FClienteSelecionado.Codigo, FTotal);
+    if lSalvou then
+      Result := lPedidoController.GetUltimoID();
+  finally
+    lPedidoController.Free();
+  end;
+end;
+
+function TFrmPedidoVenda.GravarItensDoPedido(pCodigoPedido: Integer): Boolean;
+var
+  lItemPedidoController: TItemPedidoController;
+begin
+  lItemPedidoController := TItemPedidoController.Create();
+  try
+    Result := lItemPedidoController.Salvar(
+      pCodigoPedido,
+      cdsItensPedidoCodigo.Value,
+      cdsItensPedidoQuantidade.Value,
+      cdsItensPedidoValorUnitario.AsFloat,
+      cdsItensPedidoValorTotal.AsFloat
+    );
+  finally
+    lItemPedidoController.Free();
+  end;
+end;
+
+procedure TFrmPedidoVenda.btnGravarPedidoClick(Sender: TObject);
+const
+  MENSAGEM_ERRO = 'Houve um erro ao gravar os pedidos, verifique sua conexão com o Banco de Dados e tente novamente.';
+  MENSAGEM_SUCESSO = 'Pedido gravado com sucesso!';
+var
+  lCodigoPedido: Integer;
+begin
+  FConexaoMySQLDAO.StartTransaction();
+  lCodigoPedido := GravarPedidoERetornarID();
+
+  if lCodigoPedido = -1 then
+  begin
+    FConexaoMySQLDAO.Rollback();
+    MessageDlg(MENSAGEM_ERRO, mtInformation, [mbOK], 0);
+    Exit;
+  end;
+
+  cdsItensPedido.First();
+  while not cdsItensPedido.Eof do
+  begin
+    GravarItensDoPedido(lCodigoPedido);
+    cdsItensPedido.Next();
+  end;
+  FConexaoMySQLDAO.Commit();
+  LimparDadosDaTela();
+  MessageDlg(MENSAGEM_SUCESSO, mtInformation, [mbOK], 0);
 end;
 
 procedure TFrmPedidoVenda.SetarValoresCamposCliente();
@@ -185,16 +251,7 @@ begin
   if ((FClienteSelecionado.Codigo <> -1) and (edtCodigoCliente.Text = '')) then
     begin
       if (MessageDlg(MENSAGEM, mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrYes) then
-      begin
-        FClienteSelecionado := TSelecaoModel.ModeloZerado();
-        FProdutoSelecionado := TSelecaoModel.ModeloZerado();
-        SetarValoresCamposCliente();
-        SetarValoresCamposProduto();
-        cdsItensPedido.EmptyDataSet();
-        AtualizarPrecoTotal();
-
-        TSalesSoftUtils.SetarFoco(edtCodigoCliente);
-      end
+        LimparDadosDaTela()
       else
         edtCodigoCliente.Text := IntToStr(FClienteSelecionado.Codigo);
     end
@@ -208,6 +265,18 @@ begin
         lPedidoVendaController.Free();
       end;
     end;
+end;
+
+procedure TFrmPedidoVenda.LimparDadosDaTela();
+begin
+  FClienteSelecionado := TSelecaoModel.ModeloZerado();
+  FProdutoSelecionado := TSelecaoModel.ModeloZerado();
+  SetarValoresCamposCliente();
+  SetarValoresCamposProduto();
+  cdsItensPedido.EmptyDataSet();
+  AtualizarPrecoTotal();
+
+  TSalesSoftUtils.SetarFoco(edtCodigoCliente);
 end;
 
 procedure TFrmPedidoVenda.edtCodigoProdutoExit(Sender: TObject);

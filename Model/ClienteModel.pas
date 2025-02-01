@@ -3,10 +3,10 @@ unit ClienteModel;
 interface
 
 uses
-  SysUtils, Dialogs, FireDAC.Comp.Client, ConexaoMySQLDAO;
+  SysUtils, Dialogs, FireDAC.Comp.Client, ConexaoMySQLDAO, BaseModel;
 
 type
-  TClienteModel = class
+  TClienteModel = class(TBaseModel)
   private
     FCodigo: Integer;
     FNome: String;
@@ -27,23 +27,7 @@ class function TClienteModel.GetAll(): TFDQuery;
 const
    QUERY = 'SELECT CODIGO, NOME AS DESCRICAO FROM CLIENTES';
 begin
-  Result := TFDQuery.Create(nil);
-  try
-    try
-      FConexaoMySQLDAO.StartTransaction();
-      Result.Connection := FConexaoMySQLDAO.FConexaoPrincipal;
-      Result.SQL.Add(QUERY);
-      Result.Open();
-    except
-      on E: Exception do
-      begin
-        FConexaoMySQLDAO.Rollback();
-        ShowMessage('Erro: ' + E.Message);
-      end;
-    end;
-  finally
-    FConexaoMySQLDAO.Commit();
-  end;
+  Result := Open(Query);
 end;
 
 end.
