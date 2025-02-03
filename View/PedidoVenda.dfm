@@ -2,8 +2,8 @@ object FrmPedidoVenda: TFrmPedidoVenda
   Left = 339
   Top = 213
   Caption = 'Pedido de Venda'
-  ClientHeight = 620
-  ClientWidth = 1012
+  ClientHeight = 600
+  ClientWidth = 1000
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,19 +11,21 @@ object FrmPedidoVenda: TFrmPedidoVenda
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poMainFormCenter
+  WindowState = wsMaximized
   StyleName = 'Windows'
   OnCreate = FormCreate
+  OnResize = FormResize
   TextHeight = 15
   object pnlHeader: TPanel
     Left = 0
     Top = 0
-    Width = 1012
+    Width = 1000
     Height = 99
     Align = alTop
     TabOrder = 0
     object btnNovoPedido: TSpeedButton
       Left = 10
-      Top = 10
+      Top = 7
       Width = 130
       Height = 83
       GroupIndex = 1
@@ -38,7 +40,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
     end
     object btnVerPedidos: TSpeedButton
       Left = 154
-      Top = 10
+      Top = 7
       Width = 129
       Height = 84
       GroupIndex = 1
@@ -53,7 +55,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
     end
     object btnCancelarPedido: TSpeedButton
       Left = 298
-      Top = 10
+      Top = 7
       Width = 129
       Height = 84
       Caption = 'Cancelar Pedido'
@@ -68,21 +70,21 @@ object FrmPedidoVenda: TFrmPedidoVenda
   object pnlContent: TPanel
     Left = 0
     Top = 99
-    Width = 1012
-    Height = 521
+    Width = 1000
+    Height = 501
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object pnlBottom: TPanel
       Left = 0
-      Top = 424
-      Width = 1012
+      Top = 404
+      Width = 1000
       Height = 97
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
       DesignSize = (
-        1012
+        1000
         97)
       object lblTotal: TLabel
         Left = 19
@@ -111,7 +113,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
         ParentFont = False
       end
       object btnGravarPedido: TButton
-        Left = 865
+        Left = 859
         Top = 2
         Width = 130
         Height = 83
@@ -130,14 +132,14 @@ object FrmPedidoVenda: TFrmPedidoVenda
     object pnlCliente: TPanel
       Left = 0
       Top = 0
-      Width = 1012
+      Width = 1000
       Height = 81
       Align = alTop
       BevelOuter = bvNone
       BorderWidth = 7
       TabOrder = 1
       DesignSize = (
-        1012
+        1000
         81)
       object lblCliente: TLabel
         Left = 20
@@ -230,7 +232,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       object edtNomeCliente: TEdit
         Left = 139
         Top = 36
-        Width = 859
+        Width = 847
         Height = 31
         TabStop = False
         Anchors = [akLeft, akTop, akRight]
@@ -248,8 +250,8 @@ object FrmPedidoVenda: TFrmPedidoVenda
     object pnlItens: TPanel
       Left = 0
       Top = 81
-      Width = 1012
-      Height = 343
+      Width = 1000
+      Height = 323
       Align = alClient
       BevelOuter = bvNone
       BorderWidth = 10
@@ -257,8 +259,8 @@ object FrmPedidoVenda: TFrmPedidoVenda
       object tcItens: TTabControl
         Left = 10
         Top = 10
-        Width = 992
-        Height = 323
+        Width = 980
+        Height = 303
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -274,14 +276,14 @@ object FrmPedidoVenda: TFrmPedidoVenda
         object pnlItensHeader: TPanel
           Left = 4
           Top = 32
-          Width = 984
+          Width = 972
           Height = 87
           Align = alTop
           BevelOuter = bvNone
           ParentBackground = False
           TabOrder = 0
           DesignSize = (
-            984
+            972
             87)
           object lblProduto: TLabel
             Left = 16
@@ -297,7 +299,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             ParentFont = False
           end
           object lblQuantidade: TLabel
-            Left = 717
+            Left = 705
             Top = 5
             Width = 84
             Height = 21
@@ -312,7 +314,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             ExplicitLeft = 756
           end
           object lblValorUnitario: TLabel
-            Left = 823
+            Left = 811
             Top = 5
             Width = 99
             Height = 21
@@ -404,7 +406,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
           object edtDescricaoProduto: TEdit
             Left = 135
             Top = 32
-            Width = 576
+            Width = 564
             Height = 31
             TabStop = False
             Anchors = [akLeft, akRight]
@@ -419,7 +421,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             TabOrder = 2
           end
           object edtQuantidade: TEdit
-            Left = 717
+            Left = 705
             Top = 32
             Width = 95
             Height = 31
@@ -434,7 +436,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             TabOrder = 3
           end
           object edtValorUnitario: TEdit
-            Left = 818
+            Left = 806
             Top = 32
             Width = 115
             Height = 31
@@ -449,7 +451,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             OnKeyPress = edtValorUnitarioKeyPress
           end
           object btnAdicionarEditarItem: TBitBtn
-            Left = 939
+            Left = 927
             Top = 24
             Width = 42
             Height = 39
@@ -515,16 +517,16 @@ object FrmPedidoVenda: TFrmPedidoVenda
         object pnlItensContent: TPanel
           Left = 4
           Top = 119
-          Width = 984
-          Height = 200
+          Width = 972
+          Height = 180
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
           object grdItensPedido: TDBGrid
             Left = 0
             Top = 0
-            Width = 984
-            Height = 200
+            Width = 972
+            Height = 180
             Align = alClient
             DataSource = dsItensPedido
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -579,7 +581,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
   object dsItensPedido: TDataSource
     DataSet = cdsItensPedido
     Left = 46
-    Top = 453
+    Top = 433
   end
   object cdsItensPedido: TClientDataSet
     PersistDataPacket.Data = {
@@ -617,7 +619,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
     Params = <>
     StoreDefs = True
     Left = 142
-    Top = 453
+    Top = 433
     object cdsItensPedidoCodigo: TIntegerField
       FieldName = 'codigo'
     end

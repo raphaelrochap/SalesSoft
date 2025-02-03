@@ -53,6 +53,7 @@ type
     procedure edtValorUnitarioKeyPress(Sender: TObject; var Key: Char);
     procedure grdItensPedidoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnGravarPedidoClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     FTotal: Double;
     FItensInsercao: Boolean;
@@ -354,6 +355,21 @@ begin
 
   FItensInsercao := True;
   SetarValoresCamposCliente();
+end;
+
+procedure TFrmPedidoVenda.FormResize(Sender: TObject);
+begin
+  if ClientWidth < 1000 Then
+  begin
+    ClientWidth := 1000;
+    Mouse_Event(MOUSEEVENTF_ABSOLUTE or MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+  end;
+
+  if ClientHeight < 700 Then
+  begin
+    ClientHeight := 700;
+    Mouse_Event(MOUSEEVENTF_ABSOLUTE or MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+  end;
 end;
 
 procedure TFrmPedidoVenda.SetarCamposItensComo(pVisibilidade: Boolean);
