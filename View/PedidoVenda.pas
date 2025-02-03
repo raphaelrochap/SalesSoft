@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.StdCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, Datasnap.DBClient, FireDAC.Comp.Client, Selecao, ClienteController, SalesSoftUtils, PedidoVendaController,
-  SelecaoModel, UITypes, Vcl.Mask, Vcl.Samples.Spin, PedidoController, ItemPedidoController, ConexaoMySQLDAO;
+  SelecaoModel, UITypes, Vcl.Mask, Vcl.Samples.Spin, PedidoController, ItemPedidoController, ConexaoMySQLDAO, ClienteModel, ProdutoModel;
 
 type
   TFrmPedidoVenda = class(TForm)
@@ -56,8 +56,8 @@ type
   private
     FTotal: Double;
     FItensInsercao: Boolean;
-    FClienteSelecionado: TSelecaoModel;
-    FProdutoSelecionado: TSelecaoModel;
+    FClienteSelecionado: TClienteModel;
+    FProdutoSelecionado: TProdutoModel;
 
     procedure AtualizarPrecoTotal();
     procedure SetarValoresCamposCliente();
@@ -181,35 +181,44 @@ end;
 
 procedure TFrmPedidoVenda.SetarValoresCamposCliente();
 var
-  lCodigoTratado: String;
+  lHaClienteSelecionado: Boolean;
 begin
-  lCodigoTratado := TSalesSoftUtils.IIF(FClienteSelecionado.Codigo = -1, '', FClienteSelecionado.Codigo);
+  lHaClienteSelecionado := FClienteSelecionado.Codigo = -1;
 
-  edtCodigoCliente.Text := lCodigoTratado;
+  edtCodigoCliente.Text := TSalesSoftUtils.IIF(FClienteSelecionado.Codigo = -1, '', FClienteSelecionado.Codigo);;
   edtNomeCliente.Text := FClienteSelecionado.Nome;
 
-  btnVerPedidos.Enabled := FClienteSelecionado.Codigo = -1;
-  btnCancelarPedido.Enabled := FClienteSelecionado.Codigo = -1;
+  btnVerPedidos.Enabled := lHaClienteSelecionado;
+  btnCancelarPedido.Enabled := lHaClienteSelecionado;
+
+  edtCodigoProduto.Enabled := not lHaClienteSelecionado;
+  btnPesquisarProduto.Enabled := not lHaClienteSelecionado;
+  edtDescricaoProduto.Enabled := not lHaClienteSelecionado;
+  edtQuantidade.Enabled := not lHaClienteSelecionado;
+  edtValorUnitario.Enabled := not lHaClienteSelecionado;
+  btnAdicionarEditarItem.Enabled := not lHaClienteSelecionado;
+  grdItensPedido.Enabled := not lHaClienteSelecionado;
+  btnGravarPedido.Enabled := not lHaClienteSelecionado;
 end;
 
 procedure TFrmPedidoVenda.SetarValoresCamposProduto();
-var
-  lCodigoTratado: String;
 begin
-  lCodigoTratado := TSalesSoftUtils.IIF(FProdutoSelecionado.Codigo = -1, '', FProdutoSelecionado.Codigo);
-
-  edtCodigoProduto.Text := lCodigoTratado;
+  edtCodigoProduto.Text := TSalesSoftUtils.IIF(FProdutoSelecionado.Codigo = -1, '', FProdutoSelecionado.Codigo);;
   edtDescricaoProduto.Text := FProdutoSelecionado.Descricao;
+  edtValorUnitario.Text := TSalesSoftUtils.IIF(FProdutoSelecionado.Codigo = -1, '', FloatToStr(FProdutoSelecionado.PrecoVenda));
+
+  if (FProdutoSelecionado.Codigo = -1) then
+    edtQuantidade.Text := '';
 end;
 
 procedure TFrmPedidoVenda.btnPesquisarClienteClick(Sender: TObject);
 var
   lPedidoVendaController: TPedidoVendaController;
-  lNovoClienteSelecionado: TSelecaoModel;
+  lNovoClienteSelecionado: TClienteModel;
 begin
   lPedidoVendaController := TPedidoVendaController.Create();
   try
-    lNovoClienteSelecionado := lPedidoVendaController.ExibirERetornarSelecaoCliente(FClienteSelecionado);
+    lNovoClienteSelecionado := lPedidoVendaController.ExibirERetornarSelecaoCliente();
 
     if ((lNovoClienteSelecionado.Codigo <> -1) and (lNovoClienteSelecionado.Codigo <> FClienteSelecionado.Codigo)) then
       FClienteSelecionado := lNovoClienteSelecionado;
@@ -223,11 +232,11 @@ end;
 procedure TFrmPedidoVenda.btnPesquisarProdutoClick(Sender: TObject);
 var
   lPedidoVendaController: TPedidoVendaController;
-  lNovoProdutoSelecionado: TSelecaoModel;
+  lNovoProdutoSelecionado: TProdutoModel;
 begin
   lPedidoVendaController := TPedidoVendaController.Create();
   try
-    lNovoProdutoSelecionado := lPedidoVendaController.ExibirERetornarSelecaoProduto(FProdutoSelecionado);
+    lNovoProdutoSelecionado := lPedidoVendaController.ExibirERetornarSelecaoProduto();
 
     if ((lNovoProdutoSelecionado.Codigo <> -1) and (lNovoProdutoSelecionado.Codigo <> FProdutoSelecionado.Codigo)) then
       FProdutoSelecionado := lNovoProdutoSelecionado;
@@ -259,8 +268,13 @@ begin
     begin
       lPedidoVendaController := TPedidoVendaController.Create();
       try
-        FClienteSelecionado := lPedidoVendaController.PesquisaERetornaClientePorCodigo(StrToIntDef(edtCodigoCliente.Text, -1));
+        FClienteSelecionado := lPedidoVendaController.PesquisaERetornaClientePorCodigo(FClienteSelecionado, StrToIntDef(edtCodigoCliente.Text, -1));
         SetarValoresCamposCliente();
+
+        if (FClienteSelecionado.Codigo <> -1) then
+          TSalesSoftUtils.SetarFoco(edtCodigoProduto)
+        else
+          TSalesSoftUtils.SetarFoco(edtCodigoCliente)
       finally
         lPedidoVendaController.Free();
       end;
@@ -269,8 +283,8 @@ end;
 
 procedure TFrmPedidoVenda.LimparDadosDaTela();
 begin
-  FClienteSelecionado := TSelecaoModel.ModeloZerado();
-  FProdutoSelecionado := TSelecaoModel.ModeloZerado();
+  FClienteSelecionado.ZerarModelo();
+  FProdutoSelecionado.ZerarModelo();
   SetarValoresCamposCliente();
   SetarValoresCamposProduto();
   cdsItensPedido.EmptyDataSet();
@@ -284,12 +298,24 @@ var
   lPedidoVendaController: TPedidoVendaController;
 begin
   if ((FProdutoSelecionado.Codigo = -1) and (edtCodigoProduto.Text = '')) then
-    exit;
+    Exit;
+
+  if ((FProdutoSelecionado.Codigo <> -1) and (edtCodigoProduto.Text = '')) then
+  begin
+    FProdutoSelecionado.ZerarModelo();
+    SetarValoresCamposProduto();
+    Exit;
+  end;
 
   lPedidoVendaController := TPedidoVendaController.Create();
   try
     FProdutoSelecionado := lPedidoVendaController.PesquisaERetornaProdutoPorCodigo(StrToIntDef(edtCodigoProduto.Text, -1));
     SetarValoresCamposProduto();
+
+    if (FProdutoSelecionado.Codigo <> -1) then
+      TSalesSoftUtils.SetarFoco(edtQuantidade)
+    else
+      TSalesSoftUtils.SetarFoco(edtCodigoProduto)
   finally
     lPedidoVendaController.Free();
   end;
@@ -320,9 +346,14 @@ end;
 
 procedure TFrmPedidoVenda.FormCreate(Sender: TObject);
 begin
+  FClienteSelecionado := TClienteModel.Create();
+  FProdutoSelecionado := TProdutoModel.Create();
+
+  FClienteSelecionado.ZerarModelo();
+  FProdutoSelecionado.ZerarModelo();
+
   FItensInsercao := True;
-  FClienteSelecionado := TSelecaoModel.ModeloZerado();
-  FProdutoSelecionado := TSelecaoModel.ModeloZerado();
+  SetarValoresCamposCliente();
 end;
 
 procedure TFrmPedidoVenda.SetarCamposItensComo(pVisibilidade: Boolean);
@@ -411,7 +442,7 @@ end;
 
 procedure TFrmPedidoVenda.LimparDadosProduto();
 begin
-  FProdutoSelecionado := TSelecaoModel.ModeloZerado();
+  FProdutoSelecionado.ZerarModelo();
 
   SetarValoresCamposProduto();
 

@@ -19,15 +19,44 @@ type
     property UF: string read FUF write FUF;
 
     class function GetAll(): TFDQuery;
+    class function GetById(pCodigo: Integer): TClienteModel;
+
+    procedure ZerarModelo();
   end;
 
 implementation
+
+procedure TClienteModel.ZerarModelo();
+begin
+  Self.Codigo := -1;
+  Self.Nome := '';
+  Self.Cidade := '';
+  Self.UF := '';
+end;
 
 class function TClienteModel.GetAll(): TFDQuery;
 const
    QUERY = 'SELECT CODIGO, NOME AS DESCRICAO FROM CLIENTES';
 begin
   Result := Open(Query);
+end;
+
+class function TClienteModel.GetById(pCodigo: Integer): TClienteModel;
+const
+   QUERY = 'SELECT CODIGO, NOME, CIDADE, UF FROM CLIENTES WHERE CODIGO = %d';
+var
+  lQuery: TFDQuery;
+begin
+  lQuery := Open(Format(QUERY, [pCodigo]));
+  try
+    Result := TClienteModel.Create();
+    Result.Codigo := lQuery.Fields.FieldByName('CODIGO').AsInteger;
+    Result.Nome := lQuery.Fields.FieldByName('NOME').AsString;
+    Result.Cidade := lQuery.Fields.FieldByName('CIDADE').AsString;
+    Result.UF := lQuery.Fields.FieldByName('UF').AsString;
+  finally
+    lQuery.Free();
+  end;
 end;
 
 end.

@@ -3,25 +3,34 @@ unit PedidoModel;
 interface
 
 uses
-  Dialogs, SysUtils, BaseModel, FireDac.Comp.Client, ConexaoMySQLDAO;
+  Dialogs, SysUtils, BaseModel, FireDac.Comp.Client, ConexaoMySQLDAO, ClienteModel, ItemPedidoModel;
 
 type
   TPedidoModel = class(TBaseModel)
   private
     FNumeroPedido: Integer;
     FDataEmissao: String;
-    FCodigoCliente: Integer;
+    FCliente: TClienteModel;
     FValorTotal: Double;
+    FItens: TArray<TItemPedidoModel>;
   public
     property NumeroPedido: Integer read FNumeroPedido write FNumeroPedido;
     property DataEmissao: String read FDataEmissao write FDataEmissao;
-    property CodigoCliente: Integer read FCodigoCliente write FCodigoCliente;
+    property Cliente: TClienteModel read FCliente write FCliente;
     property ValorTotal: Double read FValorTotal write FValorTotal;
+    property Itens: TArray<TItemPedidoModel> read FItens write FItens;
 
     function Salvar(): Boolean;
+    constructor Create();
   end;
 
 implementation
+
+constructor TPedidoModel.Create();
+begin
+  Self.FCliente := TClienteModel.Create();
+  SetLength(FItens, 0);
+end;
 
 function TPedidoModel.Salvar(): Boolean;
 const
@@ -32,7 +41,7 @@ const
 begin
   Result := ExecSQL(Format(
     CONSULTA, [
-      Self.CodigoCliente,
+      Self.Cliente.Codigo,
       StringReplace(FloatToStr(ValorTotal), ',', '.', [rfReplaceAll])
     ]));
 end;

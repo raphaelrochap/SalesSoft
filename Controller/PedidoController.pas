@@ -20,7 +20,7 @@ var
 begin
   lPedidoModel := TPedidoModel.Create();
   try
-    lPedidoModel.CodigoCliente := pCodigoCliente;
+    lPedidoModel.Cliente.Codigo := pCodigoCliente;
     lPedidoModel.ValorTotal := pValorTotal;
 
     Result := lPedidoModel.Salvar();

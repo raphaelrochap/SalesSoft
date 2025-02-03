@@ -20,7 +20,7 @@ begin
   lPedidoModel := TItemPedidoModel.Create();
   try
     lPedidoModel.NumeroPedido := pNumeroPedido;
-    lPedidoModel.CodigoProduto := pCodigoProduto;
+    lPedidoModel.Produto.Codigo := pCodigoProduto;
     lPedidoModel.Quantidade := pQuantidade;
     lPedidoModel.ValorUnitario := pValorUnitario;
     lPedidoModel.ValorTotal := pValorTotal;

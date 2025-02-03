@@ -9,13 +9,13 @@ type
   TSelecaoController = class
   private
   public
-    function ExibirERetornarSelecaoCliente(pSelecaoAtual: TSelecaoModel; pDsClientes: TFDQuery): TSelecaoModel;
-    function ExibirERetornarSelecaoProduto(pSelecaoAtual: TSelecaoModel; pDsProdutos: TFDQuery): TSelecaoModel;
+    function ExibirERetornarSelecaoCliente(pDsClientes: TFDQuery): TSelecaoModel;
+    function ExibirERetornarSelecaoProduto(pDsProdutos: TFDQuery): TSelecaoModel;
   end;
 
 implementation
 
-function TSelecaoController.ExibirERetornarSelecaoCliente(pSelecaoAtual: TSelecaoModel; pDsClientes: TFDQuery): TSelecaoModel;
+function TSelecaoController.ExibirERetornarSelecaoCliente(pDsClientes: TFDQuery): TSelecaoModel;
 var
   lCliente: TSelecaoModel;
 begin
@@ -30,7 +30,7 @@ begin
   Result := lCliente;
 end;
 
-function TSelecaoController.ExibirERetornarSelecaoProduto(pSelecaoAtual: TSelecaoModel; pDsProdutos: TFDQuery): TSelecaoModel;
+function TSelecaoController.ExibirERetornarSelecaoProduto(pDsProdutos: TFDQuery): TSelecaoModel;
 var
   lProduto: TSelecaoModel;
 begin

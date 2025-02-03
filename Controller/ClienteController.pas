@@ -11,8 +11,9 @@ type
 
   public
     function GetAll(): TFDQuery;
-    function ExibirERetornarSelecao(pSelecaoAtual: TSelecaoModel): TSelecaoModel;
-    function PesquisaERetornaPorCodigo(pCodigo: Integer): TSelecaoModel;
+    function GetById(pCodigo: Integer): TClienteModel;
+    function ExibirERetornarSelecao(): TClienteModel;
+    function PesquisaERetornaPorCodigo(pClienteSelecionado: TClienteModel; pCodigo: Integer): TClienteModel;
   end;
 
 implementation
@@ -20,15 +21,17 @@ implementation
 uses
   SelecaoController;
 
-function TClienteController.ExibirERetornarSelecao(pSelecaoAtual: TSelecaoModel): TSelecaoModel;
+function TClienteController.ExibirERetornarSelecao(): TClienteModel;
 var
   lSelecaoController: TSelecaoController;
+  lSelecaoModelo: TSelecaoModel;
   lDsClientes: TFDQuery;
 begin
   lSelecaoController := TSelecaoController.Create();
   lDsClientes := GetAll();
   try
-    Result := lSelecaoController.ExibirERetornarSelecaoCliente(pSelecaoAtual, lDsClientes);
+    lSelecaoModelo := lSelecaoController.ExibirERetornarSelecaoCliente(lDsClientes);
+    Result := GetById(lSelecaoModelo.Codigo);
   finally
     lSelecaoController.Free();
     lDsClientes.Free();
@@ -40,21 +43,34 @@ begin
   Result := TClienteModel.GetAll();
 end;
 
-function TClienteController.PesquisaERetornaPorCodigo(pCodigo: Integer): TSelecaoModel;
+function TClienteController.GetById(pCodigo: Integer): TClienteModel;
+begin
+  Result := TClienteModel.Create();
+  Result.ZerarModelo();
+
+  if (pCodigo <> -1) then
+    Result := TClienteModel.GetById(pCodigo);
+end;
+
+function TClienteController.PesquisaERetornaPorCodigo(pClienteSelecionado: TClienteModel; pCodigo: Integer): TClienteModel;
 var
   lDsClientes: TFDQuery;
+  lSelecaoModelo: TSelecaoModel;
 begin
   lDsClientes := GetAll();
   try
-    Result := TSelecaoModel.ModeloZerado();
+    lSelecaoModelo := TSelecaoModel.ModeloZerado();
 
     if lDsClientes.Locate('codigo', pCodigo) then
       begin
-        Result.Codigo := lDsClientes.fields.FieldByName('codigo').AsInteger;
-        Result.Nome := lDsClientes.fields.FieldByName('descricao').AsString;
+        lSelecaoModelo.Codigo := lDsClientes.fields.FieldByName('codigo').AsInteger;
+        Result := GetById(lSelecaoModelo.Codigo);
       end
     else
-      ShowMessage('Não foi encontrado um Cliente com esse código.');
+      begin
+        ShowMessage('NÃ£o foi encontrado um Cliente com esse cÃ³digo.');
+        Result := pClienteSelecionado;
+      end;
   finally
     lDsClientes.Free();
   end;

@@ -3,7 +3,7 @@ unit ProdutoController;
 interface
 
 uses
-  SysUtils, FireDAC.Comp.Client, ProdutoModel, SelecaoModel, Dialogs;
+  SysUtils, FireDAC.Comp.Client, ProdutoModel, SelecaoModel, Dialogs, ClienteModel;
 
 type
   TProdutoController = class
@@ -11,8 +11,9 @@ type
 
   public
     function GetAll(): TFDQuery;
-    function ExibirERetornarSelecao(pSelecaoAtual: TSelecaoModel): TSelecaoModel;
-    function PesquisaERetornaPorCodigo(pCodigo: Integer): TSelecaoModel;
+    function GetById(pCodigo: Integer): TProdutoModel;
+    function ExibirERetornarSelecao(): TProdutoModel;
+    function PesquisaERetornaPorCodigo(pCodigo: Integer): TProdutoModel;
   end;
 
 implementation
@@ -20,15 +21,17 @@ implementation
 uses
   SelecaoController;
 
-function TProdutoController.ExibirERetornarSelecao(pSelecaoAtual: TSelecaoModel): TSelecaoModel;
+function TProdutoController.ExibirERetornarSelecao(): TProdutoModel;
 var
   lSelecaoController: TSelecaoController;
+  lSelecaoModelo: TSelecaoModel;
   lDsProdutos: TFDQuery;
 begin
   lDsProdutos := GetAll();
   lSelecaoController := TSelecaoController.Create();
   try
-    Result := lSelecaoController.ExibirERetornarSelecaoProduto(pSelecaoAtual, lDsProdutos);
+    lSelecaoModelo := lSelecaoController.ExibirERetornarSelecaoProduto(lDsProdutos);
+    Result := GetById(lSelecaoModelo.Codigo);
   finally
     lDsProdutos.Free();
     lSelecaoController.Free();
@@ -40,21 +43,35 @@ begin
   Result := TProdutoModel.GetAll();
 end;
 
-function TProdutoController.PesquisaERetornaPorCodigo(pCodigo: Integer): TSelecaoModel;
+function TProdutoController.GetById(pCodigo: Integer): TProdutoModel;
+begin
+  Result := TProdutoModel.Create();
+  Result.ZerarModelo();
+
+  if (pCodigo <> -1) then
+    Result := TProdutoModel.GetById(pCodigo);
+end;
+
+function TProdutoController.PesquisaERetornaPorCodigo(pCodigo: Integer): TProdutoModel;
 var
   lDsProdutos: TFDQuery;
+  lSelecaoModelo: TSelecaoModel;
 begin
   lDsProdutos := GetAll();
   try
-    Result := TSelecaoModel.ModeloZerado();
+    lSelecaoModelo := TSelecaoModel.ModeloZerado();
 
     if lDsProdutos.Locate('codigo', pCodigo) then
       begin
-        Result.Codigo := lDsProdutos.fields.FieldByName('codigo').AsInteger;
-        Result.Descricao := lDsProdutos.fields.FieldByName('descricao').AsString;
+        lSelecaoModelo.Codigo := lDsProdutos.fields.FieldByName('codigo').AsInteger;
+        Result := GetById(lSelecaoModelo.Codigo);
       end
     else
-      ShowMessage('Não foi encontrado um Produto com esse código.');
+      begin
+        Result := TProdutoModel.Create();
+        Result.ZerarModelo();
+        ShowMessage('NÃ£o foi encontrado um Produto com esse cÃ³digo.');
+      end;
   finally
     lDsProdutos.Free();
   end;
