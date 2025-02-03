@@ -3,13 +3,17 @@ unit PedidoController;
 interface
 
 uses
-  SysUtils, PedidoModel;
+  SysUtils, PedidoModel, SelecaoModel, FireDac.Comp.Client, SelecaoController, ItemPedidoController, ItemPedidoModel;
 
 type
   TPedidoController = class
   public
+    class function Remover(pPedidoModelo: TPedidoModel): Boolean;
     function Salvar(pCodigoCliente: Integer; pValorTotal: Double): Boolean;
+    function ExibirERetornarSelecao(): TPedidoModel;
     function GetUltimoID(): Integer;
+    function GetAll(): TFDQuery;
+    function GetById(pCodigo: Integer): TPedidoModel;
   end;
 
 implementation
@@ -30,11 +34,58 @@ begin
   end;
 end;
 
+function TPedidoController.GetAll(): TFDQuery;
+begin
+  Result := TPedidoModel.GetAll();
+end;
+
+function TPedidoController.GetById(pCodigo: Integer): TPedidoModel;
+var
+  lItensDoPedido: TArray<TItemPedidoModel>;
+begin
+  Result := TPedidoModel.Create();
+  Result.ZerarModelo();
+
+  if (pCodigo <> -1) then
+  begin
+    lItensDoPedido := TItemPedidoController.GetById(pCodigo);
+    Result := TPedidoModel.GetById(pCodigo);
+    Result.Itens := lItensDoPedido;
+  end;
+end;
+
 function TPedidoController.GetUltimoID(): Integer;
 const
   CONSULTA = 'SELECT MAX(NUMERO_PEDIDO) AS CODIGO FROM PEDIDOS';
 begin
   Result := TPedidoModel.Open(CONSULTA).fields.FieldByName('CODIGO').AsInteger;
+end;
+
+function TPedidoController.ExibirERetornarSelecao(): TPedidoModel;
+var
+  lSelecaoController: TSelecaoController;
+  lSelecaoModelo: TSelecaoModel;
+  lDsPedidos: TFDQuery;
+begin
+  lDsPedidos := GetAll();
+  lSelecaoController := TSelecaoController.Create();
+  try
+    lSelecaoModelo := lSelecaoController.ExibirERetornarSelecaoPedido(lDsPedidos);
+    Result := GetById(lSelecaoModelo.Codigo);
+  finally
+    lDsPedidos.Free();
+    lSelecaoController.Free();
+  end;
+end;
+
+class function TPedidoController.Remover(pPedidoModelo: TPedidoModel): Boolean;
+var
+   I: Integer;
+begin
+  for I := 0 to Length(pPedidoModelo.Itens) -1 do
+    TItemPedidoController.Remover(pPedidoModelo.Itens[I]);
+
+  Result := pPedidoModelo.Remover();
 end;
 
 end.

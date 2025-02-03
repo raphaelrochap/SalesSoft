@@ -3,12 +3,14 @@ unit ItemPedidoController;
 interface
 
 uses
-  ItemPedidoModel;
+  SysUtils, ItemPedidoModel, BaseModel, PedidoModel;
 
 type
-  TItemPedidoController = class
+  TItemPedidoController = class(TBaseModel)
   public
     function Salvar(pNumeroPedido, pCodigoProduto, pQuantidade: Integer; pValorUnitario, pValorTotal: Double): Boolean;
+    class procedure Remover(pItemPedidoModelo: TItemPedidoModel);
+    class function GetById(pCodigo: Integer): TArray<TItemPedidoModel>;
   end;
 
 implementation
@@ -29,6 +31,16 @@ begin
   finally
     lPedidoModel.Free();
   end;
+end;
+
+class function TItemPedidoController.GetById(pCodigo: Integer): TArray<TItemPedidoModel>;
+begin
+  Result := TItemPedidoModel.GetById(pCodigo);
+end;
+
+class procedure TItemPedidoController.Remover(pItemPedidoModelo: TItemPedidoModel);
+begin
+  pItemPedidoModelo.Remover()
 end;
 
 end.

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.StdCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, Datasnap.DBClient, FireDAC.Comp.Client, Selecao, ClienteController, SalesSoftUtils, PedidoVendaController,
-  SelecaoModel, UITypes, Vcl.Mask, Vcl.Samples.Spin, PedidoController, ItemPedidoController, ConexaoMySQLDAO, ClienteModel, ProdutoModel;
+  SelecaoModel, UITypes, Vcl.Mask, Vcl.Samples.Spin, PedidoController, ItemPedidoController, ConexaoMySQLDAO, ClienteModel, ProdutoModel, PedidoModel;
 
 type
   TFrmPedidoVenda = class(TForm)
@@ -54,6 +54,7 @@ type
     procedure grdItensPedidoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnGravarPedidoClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure btnCancelarPedidoClick(Sender: TObject);
   private
     FTotal: Double;
     FItensInsercao: Boolean;
@@ -116,6 +117,28 @@ begin
   AtualizarPrecoTotal();
   LimparDadosProduto();
   btnAdicionarEditarItem.Glyph.LoadFromResourceName(HInstance, 'ADDICON');
+end;
+
+procedure TFrmPedidoVenda.btnCancelarPedidoClick(Sender: TObject);
+var
+  lPedidoVendaController: TPedidoVendaController;
+  lPedidoSelecionado: TPedidoModel;
+begin
+  lPedidoVendaController := TPedidoVendaController.Create();
+  lPedidoSelecionado := lPedidoVendaController.ExibirERetornarSelecaoPedido();
+  try
+    try
+      FConexaoMySQLDAO.StartTransaction();
+      if lPedidoVendaController.RemoverPedido(lPedidoSelecionado) then
+        ShowMessage('Pedido cancelado com sucesso!');
+    except on E: Exception do
+      FConexaoMySQLDAO.Rollback();
+    end;
+  finally
+    FConexaoMySQLDAO.Commit();
+    lPedidoVendaController.Free();
+    lPedidoSelecionado.Free();
+  end;
 end;
 
 function TFrmPedidoVenda.GravarPedidoERetornarID(): Integer;
@@ -218,8 +241,8 @@ var
   lNovoClienteSelecionado: TClienteModel;
 begin
   lPedidoVendaController := TPedidoVendaController.Create();
+  lNovoClienteSelecionado := lPedidoVendaController.ExibirERetornarSelecaoCliente();
   try
-    lNovoClienteSelecionado := lPedidoVendaController.ExibirERetornarSelecaoCliente();
 
     if ((lNovoClienteSelecionado.Codigo <> -1) and (lNovoClienteSelecionado.Codigo <> FClienteSelecionado.Codigo)) then
       FClienteSelecionado := lNovoClienteSelecionado;
@@ -227,6 +250,7 @@ begin
     SetarValoresCamposCliente();
   finally
     lPedidoVendaController.Free();
+    lNovoClienteSelecionado.Free();
   end;
 end;
 
@@ -236,8 +260,8 @@ var
   lNovoProdutoSelecionado: TProdutoModel;
 begin
   lPedidoVendaController := TPedidoVendaController.Create();
+  lNovoProdutoSelecionado := lPedidoVendaController.ExibirERetornarSelecaoProduto();
   try
-    lNovoProdutoSelecionado := lPedidoVendaController.ExibirERetornarSelecaoProduto();
 
     if ((lNovoProdutoSelecionado.Codigo <> -1) and (lNovoProdutoSelecionado.Codigo <> FProdutoSelecionado.Codigo)) then
       FProdutoSelecionado := lNovoProdutoSelecionado;
@@ -245,6 +269,7 @@ begin
     SetarValoresCamposProduto();
   finally
     lPedidoVendaController.Free();
+    lNovoProdutoSelecionado.Free();
   end;
 end;
 

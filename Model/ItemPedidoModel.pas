@@ -22,8 +22,13 @@ type
     property ValorUnitario: Double read FValorUnitario write FValorUnitario;
     property ValorTotal: Double read FValorTotal write FValorTotal;
 
+    class function GetById(pCodigo: Integer): TArray<TItemPedidoModel>;
+
+    procedure Remover();
     function Salvar(): Boolean;
     constructor Create();
+    destructor Destroy; override;
+
   end;
 
 implementation
@@ -31,6 +36,11 @@ implementation
 constructor TItemPedidoModel.Create();
 begin
   FProduto := TProdutoModel.Create();
+end;
+
+destructor TItemPedidoModel.Destroy();
+begin
+  FProduto.Free();
 end;
 
 function TItemPedidoModel.Salvar(): Boolean;
@@ -48,6 +58,57 @@ begin
       StringReplace(FloatToStr(Self.ValorUnitario), ',', '.', [rfReplaceAll]),
       StringReplace(FloatToStr(Self.ValorTotal), ',', '.', [rfReplaceAll])
     ]));
+end;
+
+class function TItemPedidoModel.GetById(pCodigo: Integer): TArray<TItemPedidoModel>;
+const
+   QUERY = 'SELECT ' +
+           '  PEDIDOITENS.ID, ' +
+           '    PEDIDOITENS.NUMERO_PEDIDO, ' +
+           '    PEDIDOITENS.CODIGO_PRODUTO, ' +
+           '    PRODUTOS.DESCRICAO AS DESCRICAO_PRODUTO, ' +
+           '    PRODUTOS.PRECO_VENDA, ' +
+           '    PEDIDOITENS.QUANTIDADE, ' +
+           '    PEDIDOITENS.VALOR_UNITARIO, ' +
+           '    PEDIDOITENS.VALOR_TOTAL ' +
+           'FROM ' +
+           '  PEDIDOITENS ' +
+           'INNER JOIN ' +
+           '  PRODUTOS ON PRODUTOS.CODIGO = PEDIDOITENS.CODIGO_PRODUTO ' +
+           'WHERE ' +
+           '  NUMERO_PEDIDO = %d ';
+var
+  lQueryPedido: TFDQuery;
+  lIndex: Integer;
+begin
+  lIndex := 0;
+  SetLength(Result, lIndex);
+  lQueryPedido := Open(Format(QUERY, [pCodigo]));
+  lQueryPedido.First();
+  while not lQueryPedido.Eof do
+  begin
+    lIndex := Length(Result);
+    SetLength(Result, lIndex + 1);
+    Result[lIndex] := TItemPedidoModel.Create();
+
+    Result[lIndex].Id := lQueryPedido.Fields.FieldByName('ID').AsInteger;
+    Result[lIndex].NumeroPedido := lQueryPedido.Fields.FieldByName('NUMERO_PEDIDO').AsInteger;
+    Result[lIndex].Produto.Codigo := lQueryPedido.Fields.FieldByName('CODIGO_PRODUTO').AsInteger;
+    Result[lIndex].Produto.Descricao := lQueryPedido.Fields.FieldByName('DESCRICAO_PRODUTO').AsString;
+    Result[lIndex].Produto.PrecoVenda := lQueryPedido.Fields.FieldByName('PRECO_VENDA').AsInteger;
+    Result[lIndex].Quantidade := lQueryPedido.Fields.FieldByName('QUANTIDADE').AsInteger;
+    Result[lIndex].ValorUnitario := lQueryPedido.Fields.FieldByName('VALOR_UNITARIO').AsFloat;
+    Result[lIndex].ValorTotal := lQueryPedido.Fields.FieldByName('VALOR_TOTAL').AsFloat;
+
+    lQueryPedido.Next();
+  end;
+end;
+
+procedure TItemPedidoModel.Remover();
+const
+  CONSULTA = 'DELETE FROM PEDIDOITENS WHERE ID = %d';
+begin
+  ExecSQL(Format(CONSULTA, [Self.Id]));
 end;
 
 end.

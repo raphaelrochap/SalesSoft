@@ -65,6 +65,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
+      OnClick = btnCancelarPedidoClick
     end
   end
   object pnlContent: TPanel

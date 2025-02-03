@@ -1,4 +1,4 @@
-unit SelecaoController;
+﻿unit SelecaoController;
 
 interface
 
@@ -11,6 +11,7 @@ type
   public
     function ExibirERetornarSelecaoCliente(pDsClientes: TFDQuery): TSelecaoModel;
     function ExibirERetornarSelecaoProduto(pDsProdutos: TFDQuery): TSelecaoModel;
+    function ExibirERetornarSelecaoPedido(pDsPedidos: TFDQuery): TSelecaoModel;
   end;
 
 implementation
@@ -22,10 +23,7 @@ begin
   lCliente := TSelecaoModel.ModeloZerado();
 
   if TFrmSelecao.ExibirTelaDeSelecao(pDsClientes, 'clientes') = mrOK then
-  begin
     lCliente.Codigo := pDsClientes.fields.FieldByName('Código').AsInteger;
-    lCliente.Nome := pDsClientes.fields.FieldByName('Nome').AsString;
-  end;
 
   Result := lCliente;
 end;
@@ -37,12 +35,21 @@ begin
   lProduto := TSelecaoModel.ModeloZerado();
 
   if TFrmSelecao.ExibirTelaDeSelecao(pDsProdutos, 'produtos') = mrOK then
-  begin
     lProduto.Codigo := pDsProdutos.fields.FieldByName('Código').AsInteger;
-    lProduto.Descricao := pDsProdutos.fields.FieldByName('Descrição').AsString;
-  end;
 
   Result := lProduto;
+end;
+
+function TSelecaoController.ExibirERetornarSelecaoPedido(pDsPedidos: TFDQuery): TSelecaoModel;
+var
+  lPedido: TSelecaoModel;
+begin
+  lPedido := TSelecaoModel.ModeloZerado();
+
+  if TFrmSelecao.ExibirTelaDeSelecao(pDsPedidos, 'produtos') = mrOK then
+    lPedido.Codigo := pDsPedidos.fields.FieldByName('Número do Pedido').AsInteger;
+
+  Result := lPedido;
 end;
 
 end.

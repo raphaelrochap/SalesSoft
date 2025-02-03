@@ -3,14 +3,16 @@ unit PedidoVendaController;
 interface
 
 uses
-  SelecaoModel, ClienteModel, ClienteController, ProdutoController, ProdutoModel;
+  SelecaoModel, ClienteModel, ProdutoModel, PedidoModel, ClienteController, ProdutoController, PedidoController;
 
 type
   TPedidoVendaController = class
   private
   public
+    function RemoverPedido(pPedidoModelo: TPedidoModel): Boolean;
     function ExibirERetornarSelecaoCliente(): TClienteModel;
     function ExibirERetornarSelecaoProduto(): TProdutoModel;
+    function ExibirERetornarSelecaoPedido(): TPedidoModel;
     function PesquisaERetornaClientePorCodigo(pClienteSelecionado: TClienteModel; pCodigo: Integer): TClienteModel;
     function PesquisaERetornaProdutoPorCodigo(pCodigo: Integer): TProdutoModel;
   end;
@@ -41,6 +43,18 @@ begin
   end;
 end;
 
+function TPedidoVendaController.ExibirERetornarSelecaoPedido(): TPedidoModel;
+var
+  lPedidoController: TPedidoController;
+begin
+  lPedidoController := TPedidoController.Create();
+  try
+    Result := lPedidoController.ExibirERetornarSelecao();
+  finally
+    lPedidoController.Free();
+  end;
+end;
+
 function TPedidoVendaController.PesquisaERetornaClientePorCodigo(pClienteSelecionado: TClienteModel; pCodigo: Integer): TClienteModel;
 var
   lClienteController: TClienteController;
@@ -63,6 +77,11 @@ begin
   finally
     lProdutoController.Free();
   end;
+end;
+
+function TPedidoVendaController.RemoverPedido(pPedidoModelo: TPedidoModel): Boolean;
+begin
+  Result := TPedidoController.Remover(pPedidoModelo);
 end;
 
 end.
