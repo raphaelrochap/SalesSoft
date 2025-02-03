@@ -40,8 +40,8 @@ const
              ' VALUES ' +
              '   (%d, %d, %d, %s, %s);';
 begin
-  Result := ExecSQL(Format(
-    CONSULTA, [
+  Result := ExecSQL(Format(CONSULTA,
+    [
       Self.NumeroPedido,
       Self.Produto.Codigo,
       Self.Quantidade,

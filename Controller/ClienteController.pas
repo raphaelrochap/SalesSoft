@@ -1,4 +1,4 @@
-unit ClienteController;
+﻿unit ClienteController;
 
 interface
 
@@ -61,9 +61,9 @@ begin
   try
     lSelecaoModelo := TSelecaoModel.ModeloZerado();
 
-    if lDsClientes.Locate('codigo', pCodigo) then
+    if lDsClientes.Locate('Código', pCodigo) then
       begin
-        lSelecaoModelo.Codigo := lDsClientes.fields.FieldByName('codigo').AsInteger;
+        lSelecaoModelo.Codigo := lDsClientes.fields.FieldByName('Código').AsInteger;
         Result := GetById(lSelecaoModelo.Codigo);
       end
     else

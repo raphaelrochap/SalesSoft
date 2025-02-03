@@ -1,4 +1,4 @@
-unit ProdutoController;
+﻿unit ProdutoController;
 
 interface
 
@@ -61,9 +61,9 @@ begin
   try
     lSelecaoModelo := TSelecaoModel.ModeloZerado();
 
-    if lDsProdutos.Locate('codigo', pCodigo) then
+    if lDsProdutos.Locate('Código', pCodigo) then
       begin
-        lSelecaoModelo.Codigo := lDsProdutos.fields.FieldByName('codigo').AsInteger;
+        lSelecaoModelo.Codigo := lDsProdutos.fields.FieldByName('Código').AsInteger;
         Result := GetById(lSelecaoModelo.Codigo);
       end
     else

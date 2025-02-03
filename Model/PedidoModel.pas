@@ -9,13 +9,13 @@ type
   TPedidoModel = class(TBaseModel)
   private
     FNumeroPedido: Integer;
-    FDataEmissao: String;
+    FDataEmissao: TDateTime;
     FCliente: TClienteModel;
     FValorTotal: Double;
     FItens: TArray<TItemPedidoModel>;
   public
     property NumeroPedido: Integer read FNumeroPedido write FNumeroPedido;
-    property DataEmissao: String read FDataEmissao write FDataEmissao;
+    property DataEmissao: TDateTime read FDataEmissao write FDataEmissao;
     property Cliente: TClienteModel read FCliente write FCliente;
     property ValorTotal: Double read FValorTotal write FValorTotal;
     property Itens: TArray<TItemPedidoModel> read FItens write FItens;
@@ -35,13 +35,14 @@ end;
 function TPedidoModel.Salvar(): Boolean;
 const
   CONSULTA = 'INSERT INTO PEDIDOS ' +
-             '   (CODIGO_CLIENTE, VALOR_TOTAL) ' +
+             '   (CODIGO_CLIENTE, DATA_EMISSAO, VALOR_TOTAL) ' +
              ' VALUES ' +
-             '   (%d, %s)';
+             '   (%d, ''%s'', %s)';
 begin
-  Result := ExecSQL(Format(
-    CONSULTA, [
+  Result := ExecSQL(Format(CONSULTA,
+    [
       Self.Cliente.Codigo,
+      FormatDateTime('yyyy-mm-dd hh:nn:ss', Self.DataEmissao),
       StringReplace(FloatToStr(ValorTotal), ',', '.', [rfReplaceAll])
     ]));
 end;

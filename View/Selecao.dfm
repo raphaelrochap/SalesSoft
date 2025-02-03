@@ -50,20 +50,6 @@ object FrmSelecao: TFrmSelecao
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
       OnDblClick = GridSelecaoDblClick
-      Columns = <
-        item
-          Expanded = False
-          FieldName = 'codigo'
-          Title.Caption = 'C'#243'digo'
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'descricao'
-          Title.Caption = 'Descri'#231#227'o'
-          Width = 376
-          Visible = True
-        end>
     end
     object btnSelecionar: TButton
       Left = 442

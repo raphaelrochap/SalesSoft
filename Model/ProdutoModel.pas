@@ -33,7 +33,7 @@ end;
 
 class function TProdutoModel.GetAll(): TFDQuery;
 const
-   QUERY = 'SELECT CODIGO, DESCRICAO FROM PRODUTOS';
+   QUERY = 'SELECT CODIGO as ''Código'', DESCRICAO as ''Descrição'' FROM PRODUTOS';
 begin
   Result := TFDQuery.Create(nil);
   try

@@ -23,8 +23,8 @@ begin
 
   if TFrmSelecao.ExibirTelaDeSelecao(pDsClientes, 'clientes') = mrOK then
   begin
-    lCliente.Codigo := pDsClientes.fields.FieldByName('codigo').AsInteger;
-    lCliente.Nome := pDsClientes.fields.FieldByName('descricao').AsString;
+    lCliente.Codigo := pDsClientes.fields.FieldByName('Código').AsInteger;
+    lCliente.Nome := pDsClientes.fields.FieldByName('Nome').AsString;
   end;
 
   Result := lCliente;
@@ -38,8 +38,8 @@ begin
 
   if TFrmSelecao.ExibirTelaDeSelecao(pDsProdutos, 'produtos') = mrOK then
   begin
-    lProduto.Codigo := pDsProdutos.fields.FieldByName('codigo').AsInteger;
-    lProduto.Descricao := pDsProdutos.fields.FieldByName('descricao').AsString;
+    lProduto.Codigo := pDsProdutos.fields.FieldByName('Código').AsInteger;
+    lProduto.Descricao := pDsProdutos.fields.FieldByName('Descrição').AsString;
   end;
 
   Result := lProduto;

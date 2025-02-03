@@ -3,7 +3,7 @@ unit PedidoController;
 interface
 
 uses
-  PedidoModel;
+  SysUtils, PedidoModel;
 
 type
   TPedidoController = class
@@ -21,6 +21,7 @@ begin
   lPedidoModel := TPedidoModel.Create();
   try
     lPedidoModel.Cliente.Codigo := pCodigoCliente;
+    lPedidoModel.DataEmissao := Now();
     lPedidoModel.ValorTotal := pValorTotal;
 
     Result := lPedidoModel.Salvar();

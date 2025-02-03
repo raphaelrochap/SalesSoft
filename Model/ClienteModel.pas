@@ -1,4 +1,4 @@
-unit ClienteModel;
+﻿unit ClienteModel;
 
 interface
 
@@ -36,9 +36,9 @@ end;
 
 class function TClienteModel.GetAll(): TFDQuery;
 const
-   QUERY = 'SELECT CODIGO, NOME AS DESCRICAO FROM CLIENTES';
+   QUERY = 'SELECT CODIGO AS ''Código'', NOME AS ''Nome'' FROM CLIENTES';
 begin
-  Result := Open(Query);
+  Result := Open(QUERY);
 end;
 
 class function TClienteModel.GetById(pCodigo: Integer): TClienteModel;
