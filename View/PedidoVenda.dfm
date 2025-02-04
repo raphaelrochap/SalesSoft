@@ -23,6 +23,9 @@ object FrmPedidoVenda: TFrmPedidoVenda
     Height = 99
     Align = alTop
     TabOrder = 0
+    DesignSize = (
+      1000
+      99)
     object btnNovoPedido: TSpeedButton
       Left = 10
       Top = 7
@@ -68,6 +71,36 @@ object FrmPedidoVenda: TFrmPedidoVenda
       Font.Style = []
       ParentFont = False
       OnClick = btnCancelarPedidoClick
+    end
+    object lblPedidoTitulo: TLabel
+      Left = 761
+      Top = 18
+      Width = 153
+      Height = 45
+      Anchors = [akTop, akRight]
+      Caption = 'Pedido N'#186':'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -32
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      Visible = False
+    end
+    object lblNumeroPedidoValor: TLabel
+      Left = 922
+      Top = 18
+      Width = 17
+      Height = 45
+      Anchors = [akTop, akRight]
+      Caption = '0'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -32
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      Visible = False
     end
   end
   object pnlContent: TPanel

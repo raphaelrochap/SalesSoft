@@ -44,6 +44,8 @@ type
     cdsItensPedidoQuantidade: TIntegerField;
     cdsItensPedidoValorUnitario: TCurrencyField;
     cdsItensPedidoValorTotal: TCurrencyField;
+    lblPedidoTitulo: TLabel;
+    lblNumeroPedidoValor: TLabel;
     procedure btnAdicionarEditarItemClick(Sender: TObject);
     procedure btnPesquisarClienteClick(Sender: TObject);
     procedure edtCodigoClienteExit(Sender: TObject);
@@ -220,7 +222,11 @@ end;
 procedure TFrmPedidoVenda.IniciarNovoPedido();
 begin
   if (not FNovoPedido) then
+  begin
     LimparDadosDaTela();
+    lblPedidoTitulo.Visible := False;
+    lblNumeroPedidoValor.Visible := False;
+  end;
 end;
 
 procedure TFrmPedidoVenda.SetarValoresCamposCliente();
@@ -340,6 +346,9 @@ begin
       end
     else
       begin
+        lblPedidoTitulo.Visible := True;
+        lblNumeroPedidoValor.Visible := True;
+        lblNumeroPedidoValor.Caption := IntToStr(lPedidoSelecionado.NumeroPedido);
         FClienteSelecionado.Codigo := lPedidoSelecionado.Cliente.Codigo;
         FClienteSelecionado.Nome := lPedidoSelecionado.Cliente.Nome;
         FClienteSelecionado.Cidade := lPedidoSelecionado.Cliente.Cidade;
