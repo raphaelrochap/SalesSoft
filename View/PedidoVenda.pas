@@ -100,7 +100,35 @@ implementation
 
 function TFrmPedidoVenda.CamposValidos(): Boolean;
 begin
-  Result := (edtCodigoCliente.Text <> '') and (edtCodigoProduto.Text <> '') and (edtQuantidade.Text <> '') and (edtValorUnitario.Text <> '');
+  Result := True;
+
+  if (edtCodigoCliente.Text = '') then
+  begin
+    TSalesSoftUtils.SetarFoco(edtCodigoCliente);
+    Result := False;
+    Exit;
+  end;
+
+  if (edtCodigoProduto.Text = '') then
+  begin
+    TSalesSoftUtils.SetarFoco(edtCodigoProduto);
+    Result := False;
+    Exit;
+  end;
+
+  if (edtQuantidade.Text = '') then
+  begin
+    TSalesSoftUtils.SetarFoco(edtQuantidade);
+    Result := False;
+    Exit;
+  end;
+
+  if (edtValorUnitario.Text = '') then
+  begin
+    TSalesSoftUtils.SetarFoco(edtValorUnitario);
+    Result := False;
+    Exit;
+  end;
 end;
 
 procedure TFrmPedidoVenda.btnAdicionarEditarItemClick(Sender: TObject);
