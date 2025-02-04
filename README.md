@@ -20,3 +20,5 @@ Optei por criar uma tela de seleção genérica, entao ela pode mostrar dados de
 Todos os recursos pedidos e proteções foram implementados.
 
 Está versionado também, a query de criação das tabelas e o dump para recuperação dos dados. Tendo as tabelas Clientes e Produtos 20, registros cada para utilização do projeto.
+
+Foi utilizado transação, para caso ocorra algum erro (como na exclusão em cascata do Pedido por exemplo), assim será dado Rollback em caso de erro e Commit caso de sucesso.
