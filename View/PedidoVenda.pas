@@ -238,6 +238,13 @@ const
 var
   lCodigoPedido: Integer;
 begin
+  if cdsItensPedido.RecordCount <= 0 then
+  begin
+    MessageDlg('É necessário pelo menos um item para lançar este pedido.', mtInformation, [mbOK], 0);
+    TSalesSoftUtils.SetarFoco(edtCodigoProduto);
+    Exit;
+  end;
+
   FConexaoMySQLDAO.StartTransaction();
   lCodigoPedido := GravarPedidoERetornarID();
 

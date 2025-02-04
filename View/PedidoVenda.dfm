@@ -185,7 +185,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
         Width = 130
         Height = 83
         Anchors = [akTop, akRight]
-        Caption = 'Gravar Pedido'
+        Caption = '&Gravar Pedido'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
