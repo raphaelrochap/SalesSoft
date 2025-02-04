@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.StdCtrls, Data.DB, Vcl.Grids, Vcl.DBGrids, Datasnap.DBClient, FireDAC.Comp.Client, Selecao, ClienteController, SalesSoftUtils, PedidoVendaController,
-  SelecaoModel, UITypes, Vcl.Mask, Vcl.Samples.Spin, PedidoController, ItemPedidoController, ConexaoMySQLDAO, ClienteModel, ProdutoModel, PedidoModel;
+  SelecaoModel, UITypes, Vcl.Mask, Vcl.Samples.Spin, PedidoController, ItemPedidoController, ConexaoMySQLDAO, ClienteModel, ProdutoModel, PedidoModel, ItemPedidoModel;
 
 type
   TFrmPedidoVenda = class(TForm)
@@ -55,8 +55,11 @@ type
     procedure btnGravarPedidoClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure btnCancelarPedidoClick(Sender: TObject);
+    procedure btnVerPedidosClick(Sender: TObject);
+    procedure btnNovoPedidoClick(Sender: TObject);
   private
     FTotal: Double;
+    FNovoPedido: Boolean;
     FItensInsercao: Boolean;
     FClienteSelecionado: TClienteModel;
     FProdutoSelecionado: TProdutoModel;
@@ -68,11 +71,17 @@ type
     procedure ValidaRemocaoDeItemDoCarrinho(Key: Word);
     procedure ValidaEdicaoDeItemDoCarrinho(Key: Word);
     procedure SetarCamposItensComo(pVisibilidade: Boolean);
+    procedure DesabilitarCamposProduto(pVisibilidade: Boolean);
+    procedure SetNovoPedido(pValue: Boolean);
+    procedure PreencheGridItensDoPedido(pItensDoPedido: TArray<TItemPedidoModel>);
+    procedure IniciarNovoPedido();
+    procedure LimparDadosDaTela();
+
     function GravarPedidoERetornarID(): Integer;
     function GravarItensDoPedido(pCodigoPedido: Integer): Boolean;
-    procedure LimparDadosDaTela();
     function CamposValidos(): Boolean;
   public
+    property NovoPedido: Boolean read FNovoPedido write SetNovoPedido;
     { Public declarations }
   end;
 
@@ -203,26 +212,51 @@ begin
   MessageDlg(MENSAGEM_SUCESSO, mtInformation, [mbOK], 0);
 end;
 
+procedure TFrmPedidoVenda.btnNovoPedidoClick(Sender: TObject);
+begin
+  IniciarNovoPedido();
+end;
+
+procedure TFrmPedidoVenda.IniciarNovoPedido();
+begin
+  if (not FNovoPedido) then
+    LimparDadosDaTela();
+end;
+
 procedure TFrmPedidoVenda.SetarValoresCamposCliente();
 var
   lHaClienteSelecionado: Boolean;
 begin
-  lHaClienteSelecionado := FClienteSelecionado.Codigo = -1;
+  lHaClienteSelecionado := not (FClienteSelecionado.Codigo = -1);
 
   edtCodigoCliente.Text := TSalesSoftUtils.IIF(FClienteSelecionado.Codigo = -1, '', FClienteSelecionado.Codigo);;
   edtNomeCliente.Text := FClienteSelecionado.Nome;
 
-  btnVerPedidos.Enabled := lHaClienteSelecionado;
-  btnCancelarPedido.Enabled := lHaClienteSelecionado;
+  if (FNovoPedido) then
+    begin
+      btnVerPedidos.Enabled := not lHaClienteSelecionado;
+      btnGravarPedido.Enabled := lHaClienteSelecionado;
+      edtCodigoCliente.Enabled := True;
+      btnPesquisarCliente.Enabled := True;
+      edtNomeCliente.Enabled := True;
+    end
+  else
+    begin
+      btnVerPedidos.Enabled := True;
+      btnGravarPedido.Enabled := False;
+      edtCodigoCliente.Enabled := False;
+      btnPesquisarCliente.Enabled := False;
+      edtNomeCliente.Enabled := False;
+    end;
 
-  edtCodigoProduto.Enabled := not lHaClienteSelecionado;
-  btnPesquisarProduto.Enabled := not lHaClienteSelecionado;
-  edtDescricaoProduto.Enabled := not lHaClienteSelecionado;
-  edtQuantidade.Enabled := not lHaClienteSelecionado;
-  edtValorUnitario.Enabled := not lHaClienteSelecionado;
-  btnAdicionarEditarItem.Enabled := not lHaClienteSelecionado;
-  grdItensPedido.Enabled := not lHaClienteSelecionado;
-  btnGravarPedido.Enabled := not lHaClienteSelecionado;
+  btnCancelarPedido.Enabled := not lHaClienteSelecionado;
+  edtCodigoProduto.Enabled := lHaClienteSelecionado;
+  btnPesquisarProduto.Enabled := lHaClienteSelecionado;
+  edtDescricaoProduto.Enabled := lHaClienteSelecionado;
+  edtQuantidade.Enabled := lHaClienteSelecionado;
+  edtValorUnitario.Enabled := lHaClienteSelecionado;
+  btnAdicionarEditarItem.Enabled := lHaClienteSelecionado;
+  grdItensPedido.Enabled := lHaClienteSelecionado;
 end;
 
 procedure TFrmPedidoVenda.SetarValoresCamposProduto();
@@ -245,7 +279,10 @@ begin
   try
 
     if ((lNovoClienteSelecionado.Codigo <> -1) and (lNovoClienteSelecionado.Codigo <> FClienteSelecionado.Codigo)) then
+    begin
       FClienteSelecionado := lNovoClienteSelecionado;
+      TSalesSoftUtils.SetarFoco(edtCodigoProduto);
+    end;
 
     SetarValoresCamposCliente();
   finally
@@ -264,13 +301,77 @@ begin
   try
 
     if ((lNovoProdutoSelecionado.Codigo <> -1) and (lNovoProdutoSelecionado.Codigo <> FProdutoSelecionado.Codigo)) then
+    begin
       FProdutoSelecionado := lNovoProdutoSelecionado;
+      TSalesSoftUtils.SetarFoco(edtQuantidade);
+    end;
 
     SetarValoresCamposProduto();
   finally
     lPedidoVendaController.Free();
     lNovoProdutoSelecionado.Free();
   end;
+end;
+
+procedure TFrmPedidoVenda.DesabilitarCamposProduto(pVisibilidade: Boolean);
+begin
+  edtCodigoProduto.Enabled := pVisibilidade;
+  btnPesquisarProduto.Enabled := pVisibilidade;
+  edtDescricaoProduto.Enabled := pVisibilidade;
+  edtQuantidade.Enabled := pVisibilidade;
+  edtValorUnitario.Enabled := pVisibilidade;
+  btnAdicionarEditarItem.Enabled := pVisibilidade;
+  grdItensPedido.Enabled := pVisibilidade;
+  btnGravarPedido.Enabled := pVisibilidade;
+end;
+
+procedure TFrmPedidoVenda.btnVerPedidosClick(Sender: TObject);
+var
+  lPedidoVendaController: TPedidoVendaController;
+  lPedidoSelecionado: TPedidoModel;
+begin
+  lPedidoVendaController := TPedidoVendaController.Create();
+  lPedidoSelecionado := lPedidoVendaController.ExibirERetornarSelecaoPedido();
+  try
+    if lPedidoSelecionado.Cliente.Codigo = -1 then
+      begin
+        if FClienteSelecionado.Codigo = -1 then
+          btnNovoPedido.Down := True;
+      end
+    else
+      begin
+        FClienteSelecionado.Codigo := lPedidoSelecionado.Cliente.Codigo;
+        FClienteSelecionado.Nome := lPedidoSelecionado.Cliente.Nome;
+        FClienteSelecionado.Cidade := lPedidoSelecionado.Cliente.Cidade;
+        FClienteSelecionado.UF := lPedidoSelecionado.Cliente.UF;
+        NovoPedido := False;
+        SetarValoresCamposCliente();
+        DesabilitarCamposProduto(False);
+        PreencheGridItensDoPedido(lPedidoSelecionado.Itens);
+     end;
+  finally
+    lPedidoVendaController.Free();
+    lPedidoSelecionado.Free();
+  end;
+end;
+
+procedure TFrmPedidoVenda.PreencheGridItensDoPedido(pItensDoPedido: TArray<TItemPedidoModel>);
+var
+  I: Integer;
+begin
+  cdsItensPedido.EmptyDataSet();
+  for I := 0 to Length(pItensDoPedido) -1 do
+  begin
+
+    cdsItensPedido.Append();
+    cdsItensPedidoCodigo.Value := pItensDoPedido[I].Produto.Codigo;
+    cdsItensPedidoDescricao.AsString := pItensDoPedido[I].Produto.Descricao;
+    cdsItensPedidoQuantidade.Value := pItensDoPedido[I].Quantidade;
+    cdsItensPedidoValorUnitario.Value := pItensDoPedido[I].ValorUnitario;
+    cdsItensPedidoValorTotal.Value := pItensDoPedido[I].ValorTotal;
+    cdsItensPedido.Post();
+  end;
+  AtualizarPrecoTotal();
 end;
 
 procedure TFrmPedidoVenda.edtCodigoClienteExit(Sender: TObject);
@@ -309,6 +410,7 @@ end;
 
 procedure TFrmPedidoVenda.LimparDadosDaTela();
 begin
+  FNovoPedido := True;
   FClienteSelecionado.ZerarModelo();
   FProdutoSelecionado.ZerarModelo();
   SetarValoresCamposCliente();
@@ -372,13 +474,13 @@ end;
 
 procedure TFrmPedidoVenda.FormCreate(Sender: TObject);
 begin
+  FNovoPedido := True;
+  FItensInsercao := True;
   FClienteSelecionado := TClienteModel.Create();
   FProdutoSelecionado := TProdutoModel.Create();
-
   FClienteSelecionado.ZerarModelo();
   FProdutoSelecionado.ZerarModelo();
 
-  FItensInsercao := True;
   SetarValoresCamposCliente();
 end;
 
@@ -491,6 +593,17 @@ begin
   edtValorUnitario.Text := '';
 
   TSalesSoftUtils.SetarFoco(edtCodigoProduto);
+end;
+
+procedure TFrmPedidoVenda.SetNovoPedido(pValue: Boolean);
+begin
+  FNovoPedido := pValue;
+
+  if FNovoPedido then
+  begin
+    btnNovoPedido.Down := True;
+    DesabilitarCamposProduto(False);
+  end;
 end;
 
 end.

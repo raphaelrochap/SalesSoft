@@ -3,7 +3,7 @@ unit PedidoController;
 interface
 
 uses
-  SysUtils, PedidoModel, SelecaoModel, FireDac.Comp.Client, SelecaoController, ItemPedidoController, ItemPedidoModel;
+  SysUtils, PedidoModel, SelecaoModel, FireDac.Comp.Client, SelecaoController, ItemPedidoController, ItemPedidoModel, ClienteController;
 
 type
   TPedidoController = class
@@ -42,15 +42,22 @@ end;
 function TPedidoController.GetById(pCodigo: Integer): TPedidoModel;
 var
   lItensDoPedido: TArray<TItemPedidoModel>;
+  lClienteController: TClienteController;
 begin
   Result := TPedidoModel.Create();
-  Result.ZerarModelo();
+  lClienteController := TClienteController.Create();
+  try
+    Result.ZerarModelo();
 
-  if (pCodigo <> -1) then
-  begin
-    lItensDoPedido := TItemPedidoController.GetById(pCodigo);
-    Result := TPedidoModel.GetById(pCodigo);
-    Result.Itens := lItensDoPedido;
+    if (pCodigo <> -1) then
+    begin
+      lItensDoPedido := TItemPedidoController.GetById(pCodigo);
+      Result := TPedidoModel.GetById(pCodigo);
+      Result.Cliente := lClienteController.GetById(Result.Cliente.Codigo);
+      Result.Itens := lItensDoPedido;
+    end;
+  finally
+    lClienteController.Free();
   end;
 end;
 

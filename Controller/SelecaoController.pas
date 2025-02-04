@@ -46,7 +46,7 @@ var
 begin
   lPedido := TSelecaoModel.ModeloZerado();
 
-  if TFrmSelecao.ExibirTelaDeSelecao(pDsPedidos, 'produtos') = mrOK then
+  if TFrmSelecao.ExibirTelaDeSelecao(pDsPedidos, 'pedidos') = mrOK then
     lPedido.Codigo := pDsPedidos.fields.FieldByName('Número do Pedido').AsInteger;
 
   Result := lPedido;

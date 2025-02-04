@@ -37,6 +37,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
+      OnClick = btnNovoPedidoClick
     end
     object btnVerPedidos: TSpeedButton
       Left = 154
@@ -52,6 +53,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       Font.Style = []
       ParentFont = False
       Transparent = False
+      OnClick = btnVerPedidosClick
     end
     object btnCancelarPedido: TSpeedButton
       Left = 298

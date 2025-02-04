@@ -34,6 +34,7 @@ implementation
 constructor TPedidoModel.Create();
 begin
   Self.FCliente := TClienteModel.Create();
+  Self.Cliente.Codigo := -1;
   SetLength(FItens, 0);
 end;
 
@@ -127,7 +128,6 @@ begin
     Result.DataEmissao := lQueryPedido.Fields.FieldByName('Data de Emissão').AsDateTime;
     Result.ValorTotal := lQueryPedido.Fields.FieldByName('Valor Total').AsInteger;
     Result.Cliente.Codigo := lQueryPedido.Fields.FieldByName('Código do Cliente').AsInteger;
-    Result.Cliente.Nome := lQueryPedido.Fields.FieldByName('Nome do Cliente').AsString;
   finally
     lQueryPedido.Free();
   end;
