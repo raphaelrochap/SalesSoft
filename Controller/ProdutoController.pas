@@ -70,7 +70,7 @@ begin
       begin
         Result := TProdutoModel.Create();
         Result.ZerarModelo();
-        ShowMessage('Não foi encontrado um Produto com esse código.');
+        MessageDlg('Não foi encontrado um Produto com esse código.', mtInformation, [mbOK], 0)
       end;
   finally
     lDsProdutos.Free();

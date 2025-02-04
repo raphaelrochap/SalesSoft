@@ -130,7 +130,6 @@
         </DelphiCompile>
         <DCCReference Include="TelaPrincipal.pas">
             <Form>FrmTelaPrincipal</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="DAO\ConexaoMySQLDAO.pas"/>
         <DCCReference Include="Model\ClienteModel.pas"/>
@@ -139,11 +138,9 @@
         <DCCReference Include="Model\ItemPedidoModel.pas"/>
         <DCCReference Include="View\PedidoVenda.pas">
             <Form>FrmPedidoVenda</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="View\Selecao.pas">
             <Form>FrmSelecao</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Controller\ClienteController.pas"/>
         <DCCReference Include="Classes\SalesSoftUtils.pas"/>

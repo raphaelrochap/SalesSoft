@@ -30,6 +30,7 @@ begin
 end;
 
 begin
+  ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.Title := 'SalesSoft';

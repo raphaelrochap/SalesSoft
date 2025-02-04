@@ -21,6 +21,7 @@ type
     procedure Rollback(pExibirMensagem: Boolean = True; pMessage: String = '');
     class function GetInstance(): TConexaoMySQLDAO;
     constructor Create();
+    destructor Destroy; override;
   end;
 
 var
@@ -33,6 +34,14 @@ begin
   FFDPhysMySQLDriverLink := TFDPhysMySQLDriverLink.Create(nil);
   FFDGUIxWaitCursor := TFDGUIxWaitCursor.Create(nil);
 end;
+
+destructor TConexaoMySQLDAO.Destroy();
+begin
+  FreeAndNil(FConexaoPrincipal);
+  FreeAndNil(FFDPhysMySQLDriverLink);
+  FreeAndNil(FFDGUIxWaitCursor);
+end;
+
 
 class function TConexaoMySQLDAO.GetInstance(): TConexaoMySQLDAO;
 begin

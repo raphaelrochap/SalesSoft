@@ -53,7 +53,7 @@ begin
   try
     Result := lTelaDeSelecao.ShowModal();
   finally
-    FreeAndNil(lTelaDeSelecao);
+    lTelaDeSelecao.Free();
   end;
 end;
 

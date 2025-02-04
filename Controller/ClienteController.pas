@@ -68,7 +68,7 @@ begin
       end
     else
       begin
-        ShowMessage('Não foi encontrado um Cliente com esse código.');
+        MessageDlg('Não foi encontrado um Cliente com esse código.', mtInformation, [mbOK], 0);
         Result := pClienteSelecionado;
       end;
   finally

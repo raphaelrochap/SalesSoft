@@ -84,6 +84,7 @@ type
     function CamposValidos(): Boolean;
   public
     property NovoPedido: Boolean read FNovoPedido write SetNovoPedido;
+
     { Public declarations }
   end;
 
@@ -141,11 +142,9 @@ begin
     try
       FConexaoMySQLDAO.StartTransaction();
       if lPedidoVendaController.RemoverPedido(lPedidoSelecionado) then
-        ShowMessage('Pedido cancelado com sucesso!')
+        MessageDlg('Pedido cancelado com sucesso!', mtInformation, [mbOK], 0)
       else
-        begin
-          FConexaoMySQLDAO.Rollback(False);
-        end;
+        FConexaoMySQLDAO.Rollback(False);
     except on E: Exception do
       FConexaoMySQLDAO.Rollback();
     end;
@@ -290,6 +289,9 @@ begin
 
     if ((lNovoClienteSelecionado.Codigo <> -1) and (lNovoClienteSelecionado.Codigo <> FClienteSelecionado.Codigo)) then
     begin
+      if Assigned(FClienteSelecionado) then
+        FClienteSelecionado.Free();
+
       FClienteSelecionado := lNovoClienteSelecionado;
       TSalesSoftUtils.SetarFoco(edtCodigoProduto);
     end;
@@ -312,6 +314,9 @@ begin
 
     if ((lNovoProdutoSelecionado.Codigo <> -1) and (lNovoProdutoSelecionado.Codigo <> FProdutoSelecionado.Codigo)) then
     begin
+      if Assigned(FProdutoSelecionado) then
+        FProdutoSelecionado.Free();
+
       FProdutoSelecionado := lNovoProdutoSelecionado;
       TSalesSoftUtils.SetarFoco(edtQuantidade);
     end;
@@ -450,6 +455,9 @@ begin
 
   lPedidoVendaController := TPedidoVendaController.Create();
   try
+    if Assigned(FProdutoSelecionado) then
+      FProdutoSelecionado.Free();
+
     FProdutoSelecionado := lPedidoVendaController.PesquisaERetornaProdutoPorCodigo(StrToIntDef(edtCodigoProduto.Text, -1));
     SetarValoresCamposProduto();
 

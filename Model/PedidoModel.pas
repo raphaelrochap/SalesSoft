@@ -96,7 +96,7 @@ begin
       on E: Exception do
       begin
         FConexaoMySQLDAO.Rollback();
-        ShowMessage('Erro: ' + E.Message);
+        MessageDlg('Erro: ' + E.Message, mtError, [mbOK], 0);
       end;
     end;
   finally
