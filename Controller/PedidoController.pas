@@ -64,8 +64,15 @@ end;
 function TPedidoController.GetUltimoID(): Integer;
 const
   CONSULTA = 'SELECT MAX(NUMERO_PEDIDO) AS CODIGO FROM PEDIDOS';
+var
+  lQuery: TFDQuery;
 begin
-  Result := TPedidoModel.Open(CONSULTA).fields.FieldByName('CODIGO').AsInteger;
+  lQuery := TPedidoModel.Open(CONSULTA);
+  try
+    Result := lQuery.fields.FieldByName('CODIGO').AsInteger;
+  finally
+    lQuery.Free();
+  end;
 end;
 
 function TPedidoController.ExibirERetornarSelecao(): TPedidoModel;
