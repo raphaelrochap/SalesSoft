@@ -1,4 +1,4 @@
-unit PedidoModel;
+﻿unit PedidoModel;
 
 interface
 
@@ -75,8 +75,8 @@ end;
 class function TPedidoModel.GetAll(): TFDQuery;
 const
    QUERY = 'SELECT ' +
-           '  PEDIDOS.NUMERO_PEDIDO AS ''N�mero do Pedido'', ' +
-           '  DATE_FORMAT(PEDIDOS.DATA_EMISSAO, ''%d/%m/%Y'') AS ''Data de Emiss�o'', ' +
+           '  PEDIDOS.NUMERO_PEDIDO AS ''Número do Pedido'', ' +
+           '  DATE_FORMAT(PEDIDOS.DATA_EMISSAO, ''%d/%m/%Y'') AS ''Data de Emissão'', ' +
            '  CLIENTES.NOME AS ''Nome do Cliente'', ' +
            '  PEDIDOS.VALOR_TOTAL AS ''Valor Total'', ' +
            '  CLIENTES.CODIGO AS ''Código do Cliente'' ' +
@@ -107,9 +107,9 @@ end;
 class function TPedidoModel.GetById(pCodigo: Integer): TPedidoModel;
 const
    QUERY = 'SELECT ' +
-           '  PEDIDOS.NUMERO_PEDIDO AS ''N�mero do Pedido'', ' +
-           '  PEDIDOS.DATA_EMISSAO AS ''Data de Emiss�o'', ' +
-           '  CLIENTES.CODIGO AS ''C�digo do Cliente'', ' +
+           '  PEDIDOS.NUMERO_PEDIDO AS ''Número do Pedido'', ' +
+           '  PEDIDOS.DATA_EMISSAO AS ''Data de Emissão'', ' +
+           '  CLIENTES.CODIGO AS ''Código do Cliente'', ' +
            '  CLIENTES.NOME AS ''Nome do Cliente'', ' +
            '  PEDIDOS.VALOR_TOTAL AS ''Valor Total'' ' +
            'FROM ' +
@@ -124,10 +124,10 @@ begin
   lQueryPedido := Open(Format(QUERY, [pCodigo]));
   try
     Result := TPedidoModel.Create();
-    Result.NumeroPedido := lQueryPedido.Fields.FieldByName('N�mero do Pedido').AsInteger;
-    Result.DataEmissao := lQueryPedido.Fields.FieldByName('Data de Emiss�o').AsDateTime;
+    Result.NumeroPedido := lQueryPedido.Fields.FieldByName('Número do Pedido').AsInteger;
+    Result.DataEmissao := lQueryPedido.Fields.FieldByName('Data de Emissão').AsDateTime;
     Result.ValorTotal := lQueryPedido.Fields.FieldByName('Valor Total').AsInteger;
-    Result.Cliente.Codigo := lQueryPedido.Fields.FieldByName('C�digo do Cliente').AsInteger;
+    Result.Cliente.Codigo := lQueryPedido.Fields.FieldByName('Código do Cliente').AsInteger;
   finally
     lQueryPedido.Free();
   end;

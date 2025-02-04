@@ -105,7 +105,7 @@ procedure TFrmPedidoVenda.btnAdicionarEditarItemClick(Sender: TObject);
 begin
   if not CamposValidos() then
   begin
-    MessageDlg('� necess�rio que todos os campos estejam devidamente preenchidos.', mtInformation, [mbOK], 0);
+    MessageDlg('É necessário que todos os campos estejam devidamente preenchidos.', mtInformation, [mbOK], 0);
     Exit;
   end;
 
@@ -408,7 +408,7 @@ end;
 
 procedure TFrmPedidoVenda.edtCodigoClienteExit(Sender: TObject);
 const
-  MENSAGEM = 'Ao remover o cliente, voc� est� cancelando o lan�amento deste pedido e todos os itens inclu�dos abaixo ser�o retirados da tabela.' + TSalesSoftUtils.CRLF
+  MENSAGEM = 'Ao remover o cliente, você está cancelando o lançamento deste pedido e todos os itens incluídos abaixo serão retirados da tabela.' + TSalesSoftUtils.CRLF
     + TSalesSoftUtils.CRLF + 'Deseja prosseguir?';
 var
   lPedidoVendaController: TPedidoVendaController;
@@ -568,8 +568,8 @@ end;
 
 procedure TFrmPedidoVenda.ValidaRemocaoDeItemDoCarrinho(Key: Word);
 const
-  MENSAGEM = 'Produto: %d - %s' + TSalesSoftUtils.CRLF + 'Quantidade: %d' + TSalesSoftUtils.CRLF + 'Valor Unit�rio: R$ %f' + TSalesSoftUtils.CRLF + 'Valor Total: R$ %f'
-    + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Voc� tem certeza que quer remover esse item do pedido?';
+  MENSAGEM = 'Produto: %d - %s' + TSalesSoftUtils.CRLF + 'Quantidade: %d' + TSalesSoftUtils.CRLF + 'Valor Unitário: R$ %f' + TSalesSoftUtils.CRLF + 'Valor Total: R$ %f'
+    + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Você tem certeza que quer remover esse item do pedido?';
 var
   lDescricao: AnsiString;
   lCodigo, lQuantidade: Integer;
