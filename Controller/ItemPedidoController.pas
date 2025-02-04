@@ -9,7 +9,7 @@ type
   TItemPedidoController = class(TBaseModel)
   public
     function Salvar(pNumeroPedido, pCodigoProduto, pQuantidade: Integer; pValorUnitario, pValorTotal: Double): Boolean;
-    class procedure Remover(pItemPedidoModelo: TItemPedidoModel);
+    class function Remover(pItemPedidoModelo: TItemPedidoModel): Boolean;
     class function GetById(pCodigo: Integer): TArray<TItemPedidoModel>;
   end;
 
@@ -38,9 +38,9 @@ begin
   Result := TItemPedidoModel.GetById(pCodigo);
 end;
 
-class procedure TItemPedidoController.Remover(pItemPedidoModelo: TItemPedidoModel);
+class function TItemPedidoController.Remover(pItemPedidoModelo: TItemPedidoModel): Boolean;
 begin
-  pItemPedidoModelo.Remover()
+  Result := pItemPedidoModelo.Remover();
 end;
 
 end.

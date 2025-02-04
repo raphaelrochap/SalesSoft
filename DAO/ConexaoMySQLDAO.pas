@@ -18,7 +18,7 @@ type
     function ConectarAoBancoDeDados(pModeloConexao: TConexaoMySQLModel): Boolean;
     procedure StartTransaction();
     procedure Commit();
-    procedure Rollback(pMessage: String = '');
+    procedure Rollback(pExibirMensagem: Boolean = True; pMessage: String = '');
     class function GetInstance(): TConexaoMySQLDAO;
     constructor Create();
   end;
@@ -52,13 +52,15 @@ begin
   FConexaoPrincipal.Commit();
 end;
 
-procedure TConexaoMySQLDAO.Rollback(pMessage: String = '');
+procedure TConexaoMySQLDAO.Rollback(pExibirMensagem: Boolean = True; pMessage: String = '');
 begin
   if pMessage = '' then
     pMessage := 'Houve um problema com sua última transação de dados, por favor verifique sua conexão com o Banco de Dados e tente novamente';
 
+  if pExibirMensagem then
+    MessageDlg(pMessage, mtInformation, [mbOk], 0);
+
   FConexaoPrincipal.Rollback();
-  MessageDlg(pMessage, mtInformation, [mbOk], 0);
 end;
 
 function TConexaoMySQLDAO.ConectarAoBancoDeDados(pModeloConexao: TConexaoMySQLModel): Boolean;

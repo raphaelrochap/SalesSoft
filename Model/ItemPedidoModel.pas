@@ -24,7 +24,7 @@ type
 
     class function GetById(pCodigo: Integer): TArray<TItemPedidoModel>;
 
-    procedure Remover();
+    function Remover(): Boolean;
     function Salvar(): Boolean;
     constructor Create();
     destructor Destroy; override;
@@ -104,11 +104,11 @@ begin
   end;
 end;
 
-procedure TItemPedidoModel.Remover();
+function TItemPedidoModel.Remover(): Boolean;
 const
   CONSULTA = 'DELETE FROM PEDIDOITENS WHERE ID = %d';
 begin
-  ExecSQL(Format(CONSULTA, [Self.Id]));
+  Result := ExecSQL(Format(CONSULTA, [Self.Id]));
 end;
 
 end.

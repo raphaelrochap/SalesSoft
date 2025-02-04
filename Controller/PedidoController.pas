@@ -90,7 +90,11 @@ var
    I: Integer;
 begin
   for I := 0 to Length(pPedidoModelo.Itens) -1 do
-    TItemPedidoController.Remover(pPedidoModelo.Itens[I]);
+    if TItemPedidoController.Remover(pPedidoModelo.Itens[I]) then
+    begin
+      Result := False;
+      Exit;
+    end;
 
   Result := pPedidoModelo.Remover();
 end;

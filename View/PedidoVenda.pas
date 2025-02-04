@@ -141,7 +141,11 @@ begin
     try
       FConexaoMySQLDAO.StartTransaction();
       if lPedidoVendaController.RemoverPedido(lPedidoSelecionado) then
-        ShowMessage('Pedido cancelado com sucesso!');
+        ShowMessage('Pedido cancelado com sucesso!')
+      else
+        begin
+          FConexaoMySQLDAO.Rollback(False);
+        end;
     except on E: Exception do
       FConexaoMySQLDAO.Rollback();
     end;
