@@ -9,7 +9,8 @@ type
     Server: String;
     Port: String;
     Password: String;
-    CaminhoLib: String;  end;
+    CaminhoLib: String;
+  end;
 
 implementation
 

@@ -15,10 +15,6 @@ type
     imgLogo: TImage;
     btnPedidoVenda: TButton;
     procedure btnPedidoVendaClick(Sender: TObject);
-  private
-    { Private declarations }
-  public
-    { Public declarations }
   end;
 
 var
@@ -34,7 +30,11 @@ var
   lFrmPedidoVenda: TFrmPedidoVenda;
 begin
   lFrmPedidoVenda := TFrmPedidoVenda.Create(self);
-  lFrmPedidoVenda.ShowModal();
+  try
+    lFrmPedidoVenda.ShowModal();
+  finally
+    lFrmPedidoVenda.Free();
+  end;
 end;
 
 end.

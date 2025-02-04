@@ -18,7 +18,6 @@ type
 
     class function GetAll(): TFDQuery;
     class function GetById(pCodigo: Integer): TProdutoModel;
-
     procedure ZerarModelo();
   end;
 
@@ -26,9 +25,9 @@ implementation
 
 procedure TProdutoModel.ZerarModelo();
 begin
-  Self.Codigo := -1;
-  Self.Descricao := '';
-  Self.PrecoVenda := 0;
+  Self.FCodigo := -1;
+  Self.FDescricao := '';
+  Self.FPrecoVenda := 0;
 end;
 
 class function TProdutoModel.GetAll(): TFDQuery;

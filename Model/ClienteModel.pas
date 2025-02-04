@@ -20,7 +20,6 @@ type
 
     class function GetAll(): TFDQuery;
     class function GetById(pCodigo: Integer): TClienteModel;
-
     procedure ZerarModelo();
   end;
 
@@ -28,10 +27,10 @@ implementation
 
 procedure TClienteModel.ZerarModelo();
 begin
-  Self.Codigo := -1;
-  Self.Nome := '';
-  Self.Cidade := '';
-  Self.UF := '';
+  Self.FCodigo := -1;
+  Self.FNome := '';
+  Self.FCidade := '';
+  Self.FUF := '';
 end;
 
 class function TClienteModel.GetAll(): TFDQuery;

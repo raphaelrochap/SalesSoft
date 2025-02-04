@@ -3,12 +3,10 @@
 interface
 
 uses
-  SysUtils, FireDAC.Comp.Client, ProdutoModel, SelecaoModel, Dialogs, ClienteModel, UITypes;
+  SysUtils, FireDAC.Comp.Client, ProdutoModel, SelecaoModel, Dialogs, ClienteModel, UITypes, SelecaoController;
 
 type
   TProdutoController = class
-  private
-
   public
     function GetAll(): TFDQuery;
     function GetById(pCodigo: Integer): TProdutoModel;
@@ -17,9 +15,6 @@ type
   end;
 
 implementation
-
-uses
-  SelecaoController;
 
 function TProdutoController.ExibirERetornarSelecao(): TProdutoModel;
 var

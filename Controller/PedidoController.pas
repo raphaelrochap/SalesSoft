@@ -41,7 +41,6 @@ end;
 
 function TPedidoController.GetById(pCodigo: Integer): TPedidoModel;
 var
-  lItensDoPedido: TArray<TItemPedidoModel>;
   lClienteController: TClienteController;
 begin
   Result := TPedidoModel.Create();
@@ -51,10 +50,9 @@ begin
 
     if (pCodigo <> -1) then
     begin
-      lItensDoPedido := TItemPedidoController.GetById(pCodigo);
       Result := TPedidoModel.GetById(pCodigo);
       Result.Cliente := lClienteController.GetById(Result.Cliente.Codigo);
-      Result.Itens := lItensDoPedido;
+      Result.Itens := TItemPedidoController.GetById(pCodigo);
     end;
   finally
     lClienteController.Free();

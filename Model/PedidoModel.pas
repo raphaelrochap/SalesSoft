@@ -22,9 +22,9 @@ type
 
     class function GetAll(): TFDQuery;
     class function GetById(pCodigo: Integer): TPedidoModel;
+    procedure ZerarModelo();
     function Salvar(): Boolean;
     function Remover(): Boolean;
-    procedure ZerarModelo();
     constructor Create();
     destructor Destroy; override;
   end;
@@ -34,8 +34,8 @@ implementation
 constructor TPedidoModel.Create();
 begin
   Self.FCliente := TClienteModel.Create();
-  Self.Cliente.Codigo := -1;
-  SetLength(FItens, 0);
+  Self.FCliente.Codigo := -1;
+  SetLength(Self.FItens, 0);
 end;
 
 destructor TPedidoModel.Destroy();
@@ -52,9 +52,9 @@ end;
 
 procedure TPedidoModel.ZerarModelo();
 begin
-  Self.NumeroPedido := -1;
-  Self.DataEmissao := 0;
-  Self.ValorTotal := 0;
+  Self.FNumeroPedido := -1;
+  Self.FDataEmissao := 0;
+  Self.FValorTotal := 0;
 end;
 
 function TPedidoModel.Salvar(): Boolean;
@@ -66,8 +66,8 @@ const
 begin
   Result := ExecSQL(Format(CONSULTA,
     [
-      Self.Cliente.Codigo,
-      FormatDateTime('yyyy-mm-dd hh:nn:ss', Self.DataEmissao),
+      Self.FCliente.Codigo,
+      FormatDateTime('yyyy-mm-dd hh:nn:ss', Self.FDataEmissao),
       StringReplace(FloatToStr(ValorTotal), ',', '.', [rfReplaceAll])
     ]));
 end;
@@ -137,7 +137,7 @@ function TPedidoModel.Remover(): Boolean;
 const
   CONSULTA = 'DELETE FROM PEDIDOS WHERE NUMERO_PEDIDO = %d';
 begin
-  Result := ExecSQL(Format(CONSULTA, [Self.NumeroPedido]));
+  Result := ExecSQL(Format(CONSULTA, [Self.FNumeroPedido]));
 end;
 
 end.

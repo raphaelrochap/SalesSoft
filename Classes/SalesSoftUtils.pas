@@ -30,5 +30,4 @@ begin
     result := value2
 end;
 
-
 end.

@@ -131,28 +131,28 @@
         <DCCReference Include="TelaPrincipal.pas">
             <Form>FrmTelaPrincipal</Form>
         </DCCReference>
-        <DCCReference Include="DAO\ConexaoMySQLDAO.pas"/>
-        <DCCReference Include="Model\ClienteModel.pas"/>
-        <DCCReference Include="Model\ProdutoModel.pas"/>
-        <DCCReference Include="Model\PedidoModel.pas"/>
-        <DCCReference Include="Model\ItemPedidoModel.pas"/>
         <DCCReference Include="View\PedidoVenda.pas">
             <Form>FrmPedidoVenda</Form>
         </DCCReference>
         <DCCReference Include="View\Selecao.pas">
             <Form>FrmSelecao</Form>
         </DCCReference>
-        <DCCReference Include="Controller\ClienteController.pas"/>
-        <DCCReference Include="Classes\SalesSoftUtils.pas"/>
+        <DCCReference Include="DAO\ConexaoMySQLDAO.pas"/>
+        <DCCReference Include="Model\ClienteModel.pas"/>
+        <DCCReference Include="Model\ProdutoModel.pas"/>
+        <DCCReference Include="Model\PedidoModel.pas"/>
+        <DCCReference Include="Model\ItemPedidoModel.pas"/>
         <DCCReference Include="Model\SelecaoModel.pas"/>
+        <DCCReference Include="Model\ConexaoMySQLModel.pas"/>
+        <DCCReference Include="Model\BaseModel.pas"/>
+        <DCCReference Include="Controller\ClienteController.pas"/>
         <DCCReference Include="Controller\SelecaoController.pas"/>
         <DCCReference Include="Controller\PedidoVendaController.pas"/>
         <DCCReference Include="Controller\ProdutoController.pas"/>
         <DCCReference Include="Controller\TelaPrincipalController.pas"/>
-        <DCCReference Include="Model\ConexaoMySQLModel.pas"/>
-        <DCCReference Include="Model\BaseModel.pas"/>
         <DCCReference Include="Controller\PedidoController.pas"/>
         <DCCReference Include="Controller\ItemPedidoController.pas"/>
+        <DCCReference Include="Classes\SalesSoftUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

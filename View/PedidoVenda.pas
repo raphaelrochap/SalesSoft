@@ -81,14 +81,11 @@ type
     procedure PreencheGridItensDoPedido(pItensDoPedido: TArray<TItemPedidoModel>);
     procedure IniciarNovoPedido();
     procedure LimparDadosDaTela();
-
     function GravarPedidoERetornarID(): Integer;
     function GravarItensDoPedido(pCodigoPedido: Integer): Boolean;
     function CamposValidos(): Boolean;
   public
     property NovoPedido: Boolean read FNovoPedido write SetNovoPedido;
-
-    { Public declarations }
   end;
 
 var
@@ -205,13 +202,11 @@ end;
 function TFrmPedidoVenda.GravarPedidoERetornarID(): Integer;
 var
   lPedidoController: TPedidoController;
-    lSalvou: Boolean;
 begin
   lPedidoController := TPedidoController.Create();
   Result := -1;
   try
-    lSalvou := lPedidoController.Salvar(FClienteSelecionado.Codigo, FTotal);
-    if lSalvou then
+    if lPedidoController.Salvar(FClienteSelecionado.Codigo, FTotal) then
       Result := lPedidoController.GetUltimoID();
   finally
     lPedidoController.Free();
@@ -259,6 +254,7 @@ begin
     GravarItensDoPedido(lCodigoPedido);
     cdsItensPedido.Next();
   end;
+
   FConexaoMySQLDAO.Commit();
   LimparDadosDaTela();
   MessageDlg(MENSAGEM_SUCESSO, mtInformation, [mbOK], 0);

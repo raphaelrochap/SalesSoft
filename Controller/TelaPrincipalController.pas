@@ -7,7 +7,6 @@ uses
 
 type
   TTelaPrincipalController = class
-  private
   public
     const SECTION = 'BancoDeDados';
 
@@ -31,7 +30,7 @@ begin
     lArquivoINI.WriteString(SECTION, 'Password', 'root');
     lArquivoINI.WriteString(SECTION, 'CaminhoLib', 'C:\LIBMYSQL.DLL');
   finally
-    lArquivoINI.Free;
+    lArquivoINI.Free();
   end;
 end;
 
