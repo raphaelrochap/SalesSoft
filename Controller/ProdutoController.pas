@@ -3,7 +3,7 @@
 interface
 
 uses
-  SysUtils, FireDAC.Comp.Client, ProdutoModel, SelecaoModel, Dialogs, ClienteModel;
+  SysUtils, FireDAC.Comp.Client, ProdutoModel, SelecaoModel, Dialogs, ClienteModel, UITypes;
 
 type
   TProdutoController = class
@@ -45,11 +45,13 @@ end;
 
 function TProdutoController.GetById(pCodigo: Integer): TProdutoModel;
 begin
-  Result := TProdutoModel.Create();
-  Result.ZerarModelo();
-
   if (pCodigo <> -1) then
-    Result := TProdutoModel.GetById(pCodigo);
+    Result := TProdutoModel.GetById(pCodigo)
+  else
+  begin
+    Result := TProdutoModel.Create();
+    Result.ZerarModelo();
+  end;
 end;
 
 function TProdutoController.PesquisaERetornaPorCodigo(pCodigo: Integer): TProdutoModel;

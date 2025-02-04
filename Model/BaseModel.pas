@@ -3,7 +3,7 @@ unit BaseModel;
 interface
 
 uses
-  SysUtils, Dialogs, FireDAC.Comp.Client, ConexaoMySQLDAO;
+  SysUtils, Dialogs, FireDAC.Comp.Client, ConexaoMySQLDAO, UITypes;
 
 type
   TBaseModel = class

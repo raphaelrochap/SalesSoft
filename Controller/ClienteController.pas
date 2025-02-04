@@ -3,7 +3,7 @@
 interface
 
 uses
-  FireDAC.Comp.Client, ClienteModel, SelecaoModel, Dialogs;
+  SysUtils, FireDAC.Comp.Client, ClienteModel, SelecaoModel, Dialogs, UITypes;
 
 type
   TClienteController = class
@@ -45,11 +45,13 @@ end;
 
 function TClienteController.GetById(pCodigo: Integer): TClienteModel;
 begin
-  Result := TClienteModel.Create();
-  Result.ZerarModelo();
-
   if (pCodigo <> -1) then
-    Result := TClienteModel.GetById(pCodigo);
+    Result := TClienteModel.GetById(pCodigo)
+  else
+  begin
+    Result := TClienteModel.Create();
+    Result.ZerarModelo();
+  end;
 end;
 
 function TClienteController.PesquisaERetornaPorCodigo(pClienteSelecionado: TClienteModel; pCodigo: Integer): TClienteModel;
@@ -65,6 +67,7 @@ begin
       begin
         lSelecaoModelo.Codigo := lDsClientes.fields.FieldByName('Código').AsInteger;
         Result := GetById(lSelecaoModelo.Codigo);
+        FreeAndNil(pClienteSelecionado);
       end
     else
       begin

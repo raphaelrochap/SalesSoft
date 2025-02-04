@@ -59,6 +59,7 @@ type
     procedure btnCancelarPedidoClick(Sender: TObject);
     procedure btnVerPedidosClick(Sender: TObject);
     procedure btnNovoPedidoClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     FTotal: Double;
     FNovoPedido: Boolean;
@@ -132,12 +133,28 @@ begin
 end;
 
 procedure TFrmPedidoVenda.btnCancelarPedidoClick(Sender: TObject);
+const
+  MENSAGEM = 'Número do pedido: %d' + TSalesSoftUtils.CRLF + 'Data de Emissao: %s' + TSalesSoftUtils.CRLF + 'Valor Total: R$ %f' + TSalesSoftUtils.CRLF + 'Cliente: %s'
+    + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Você tem certeza que quer remover esse Pedido?';
 var
   lPedidoVendaController: TPedidoVendaController;
   lPedidoSelecionado: TPedidoModel;
 begin
   lPedidoVendaController := TPedidoVendaController.Create();
   lPedidoSelecionado := lPedidoVendaController.ExibirERetornarSelecaoPedido();
+    if (lPedidoSelecionado.NumeroPedido <> - 1)
+      and (MessageDlg(Format(MENSAGEM,
+        [
+          lPedidoSelecionado.NumeroPedido,
+          FormatDateTime('dd/mm/yyyy', lPedidoSelecionado.DataEmissao),
+          lPedidoSelecionado.ValorTotal,
+          lPedidoSelecionado.Cliente.Nome
+        ]), TMsgDlgType.mtConfirmation, [mbYes, mbNo], 0, mbNo) = mrNo) then
+      begin
+        lPedidoVendaController.Free();
+        lPedidoSelecionado.Free();
+        Exit;
+      end;
   try
     try
       FConexaoMySQLDAO.StartTransaction();
@@ -286,11 +303,10 @@ begin
   lPedidoVendaController := TPedidoVendaController.Create();
   lNovoClienteSelecionado := lPedidoVendaController.ExibirERetornarSelecaoCliente();
   try
-
     if ((lNovoClienteSelecionado.Codigo <> -1) and (lNovoClienteSelecionado.Codigo <> FClienteSelecionado.Codigo)) then
     begin
       if Assigned(FClienteSelecionado) then
-        FClienteSelecionado.Free();
+        FreeAndNil(FClienteSelecionado);
 
       FClienteSelecionado := lNovoClienteSelecionado;
       TSalesSoftUtils.SetarFoco(edtCodigoProduto);
@@ -299,7 +315,6 @@ begin
     SetarValoresCamposCliente();
   finally
     lPedidoVendaController.Free();
-    lNovoClienteSelecionado.Free();
   end;
 end;
 
@@ -315,7 +330,7 @@ begin
     if ((lNovoProdutoSelecionado.Codigo <> -1) and (lNovoProdutoSelecionado.Codigo <> FProdutoSelecionado.Codigo)) then
     begin
       if Assigned(FProdutoSelecionado) then
-        FProdutoSelecionado.Free();
+        FreeAndNil(FProdutoSelecionado);
 
       FProdutoSelecionado := lNovoProdutoSelecionado;
       TSalesSoftUtils.SetarFoco(edtQuantidade);
@@ -324,7 +339,6 @@ begin
     SetarValoresCamposProduto();
   finally
     lPedidoVendaController.Free();
-    lNovoProdutoSelecionado.Free();
   end;
 end;
 
@@ -456,7 +470,7 @@ begin
   lPedidoVendaController := TPedidoVendaController.Create();
   try
     if Assigned(FProdutoSelecionado) then
-      FProdutoSelecionado.Free();
+      FreeAndNil(FProdutoSelecionado);
 
     FProdutoSelecionado := lPedidoVendaController.PesquisaERetornaProdutoPorCodigo(StrToIntDef(edtCodigoProduto.Text, -1));
     SetarValoresCamposProduto();
@@ -503,6 +517,12 @@ begin
   FProdutoSelecionado.ZerarModelo();
 
   SetarValoresCamposCliente();
+end;
+
+procedure TFrmPedidoVenda.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(FClienteSelecionado);
+  FreeAndNil(FProdutoSelecionado);
 end;
 
 procedure TFrmPedidoVenda.FormResize(Sender: TObject);

@@ -16,6 +16,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure GridSelecaoDblClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure GridSelecaoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
   public
     class function ExibirTelaDeSelecao(pDataSet: TFDQuery; pEntidade: String): TModalResult; static;
@@ -50,6 +51,12 @@ begin
   lTelaDeSelecao := TFrmSelecao.Create(nil, pDataSet);
   lTelaDeSelecao.Caption := 'Seleção de ' + pEntidade;
 
+  if not (pDataSet.RecordCount > 0) then
+  begin
+    lTelaDeSelecao.GridSelecao.Enabled := False;
+    lTelaDeSelecao.btnSelecionar.Enabled := False;
+  end;
+
   try
     Result := lTelaDeSelecao.ShowModal();
   finally
@@ -65,9 +72,6 @@ end;
 
 procedure TFrmSelecao.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  if Key = VK_RETURN then
-    ModalResult := mrOk;
-
   if Key = VK_ESCAPE then
     ModalResult := mrCancel;
 end;
@@ -75,6 +79,12 @@ end;
 procedure TFrmSelecao.GridSelecaoDblClick(Sender: TObject);
 begin
   ModalResult := mrOk;
+end;
+
+procedure TFrmSelecao.GridSelecaoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    ModalResult := mrOk;
 end;
 
 end.

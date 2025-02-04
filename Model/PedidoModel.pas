@@ -3,7 +3,7 @@ unit PedidoModel;
 interface
 
 uses
-  Dialogs, SysUtils, BaseModel, FireDac.Comp.Client, ConexaoMySQLDAO, ClienteModel, ItemPedidoModel;
+  Dialogs, SysUtils, BaseModel, FireDac.Comp.Client, ConexaoMySQLDAO, ClienteModel, ItemPedidoModel, UITypes;
 
 type
   TPedidoModel = class(TBaseModel)
@@ -75,11 +75,11 @@ end;
 class function TPedidoModel.GetAll(): TFDQuery;
 const
    QUERY = 'SELECT ' +
-           '  PEDIDOS.NUMERO_PEDIDO AS ''Número do Pedido'', ' +
-           '  PEDIDOS.DATA_EMISSAO AS ''Data de Emissão'', ' +
-           '  CLIENTES.CODIGO AS ''Código do Cliente'', ' +
+           '  PEDIDOS.NUMERO_PEDIDO AS ''Nï¿½mero do Pedido'', ' +
+           '  DATE_FORMAT(PEDIDOS.DATA_EMISSAO, ''%d/%m/%Y'') AS ''Data de Emissï¿½o'', ' +
            '  CLIENTES.NOME AS ''Nome do Cliente'', ' +
-           '  PEDIDOS.VALOR_TOTAL AS ''Valor Total'' ' +
+           '  PEDIDOS.VALOR_TOTAL AS ''Valor Total'', ' +
+           '  CLIENTES.CODIGO AS ''CÃ³digo do Cliente'' ' +
            'FROM ' +
            '	PEDIDOS ' +
            'INNER JOIN ' +
@@ -107,9 +107,9 @@ end;
 class function TPedidoModel.GetById(pCodigo: Integer): TPedidoModel;
 const
    QUERY = 'SELECT ' +
-           '  PEDIDOS.NUMERO_PEDIDO AS ''Número do Pedido'', ' +
-           '  PEDIDOS.DATA_EMISSAO AS ''Data de Emissão'', ' +
-           '  CLIENTES.CODIGO AS ''Código do Cliente'', ' +
+           '  PEDIDOS.NUMERO_PEDIDO AS ''Nï¿½mero do Pedido'', ' +
+           '  PEDIDOS.DATA_EMISSAO AS ''Data de Emissï¿½o'', ' +
+           '  CLIENTES.CODIGO AS ''Cï¿½digo do Cliente'', ' +
            '  CLIENTES.NOME AS ''Nome do Cliente'', ' +
            '  PEDIDOS.VALOR_TOTAL AS ''Valor Total'' ' +
            'FROM ' +
@@ -124,10 +124,10 @@ begin
   lQueryPedido := Open(Format(QUERY, [pCodigo]));
   try
     Result := TPedidoModel.Create();
-    Result.NumeroPedido := lQueryPedido.Fields.FieldByName('Número do Pedido').AsInteger;
-    Result.DataEmissao := lQueryPedido.Fields.FieldByName('Data de Emissão').AsDateTime;
+    Result.NumeroPedido := lQueryPedido.Fields.FieldByName('Nï¿½mero do Pedido').AsInteger;
+    Result.DataEmissao := lQueryPedido.Fields.FieldByName('Data de Emissï¿½o').AsDateTime;
     Result.ValorTotal := lQueryPedido.Fields.FieldByName('Valor Total').AsInteger;
-    Result.Cliente.Codigo := lQueryPedido.Fields.FieldByName('Código do Cliente').AsInteger;
+    Result.Cliente.Codigo := lQueryPedido.Fields.FieldByName('Cï¿½digo do Cliente').AsInteger;
   finally
     lQueryPedido.Free();
   end;

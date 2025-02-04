@@ -50,6 +50,7 @@ object FrmSelecao: TFrmSelecao
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
       OnDblClick = GridSelecaoDblClick
+      OnKeyDown = GridSelecaoKeyDown
     end
     object btnSelecionar: TButton
       Left = 442

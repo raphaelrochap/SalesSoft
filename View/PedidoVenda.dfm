@@ -14,6 +14,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
   WindowState = wsMaximized
   StyleName = 'Windows'
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnResize = FormResize
   TextHeight = 15
   object pnlHeader: TPanel

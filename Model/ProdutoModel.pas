@@ -3,7 +3,7 @@
 interface
 
 uses
-  SysUtils, Dialogs, FireDAC.Comp.Client, ConexaoMySQLDAO, BaseModel;
+  SysUtils, Dialogs, FireDAC.Comp.Client, ConexaoMySQLDAO, BaseModel, UITypes;
 
 type
   TProdutoModel = class(TBaseModel)
