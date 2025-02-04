@@ -62,6 +62,7 @@ type
     procedure btnVerPedidosClick(Sender: TObject);
     procedure btnNovoPedidoClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure grdItensPedidoKeyPress(Sender: TObject; var Key: Char);
   private
     FTotal: Double;
     FNovoPedido: Boolean;
@@ -269,6 +270,7 @@ end;
 
 procedure TFrmPedidoVenda.btnNovoPedidoClick(Sender: TObject);
 begin
+  btnNovoPedido.Down := True;
   IniciarNovoPedido();
 end;
 
@@ -395,6 +397,7 @@ var
   lPedidoVendaController: TPedidoVendaController;
   lPedidoSelecionado: TPedidoModel;
 begin
+  btnVerPedidos.Down := True;
   lPedidoVendaController := TPedidoVendaController.Create();
   lPedidoSelecionado := lPedidoVendaController.ExibirERetornarSelecaoPedido();
   try
@@ -630,6 +633,12 @@ procedure TFrmPedidoVenda.grdItensPedidoKeyDown(Sender: TObject; var Key: Word; 
 begin
   ValidaRemocaoDeItemDoCarrinho(Key);
   ValidaEdicaoDeItemDoCarrinho(Key);
+end;
+
+procedure TFrmPedidoVenda.grdItensPedidoKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #9 then
+    btnGravarPedido.SetFocus;
 end;
 
 procedure TFrmPedidoVenda.AtualizarPrecoTotal();

@@ -22,3 +22,5 @@ Todos os recursos pedidos e proteções foram implementados.
 Está versionado também, a query de criação das tabelas e o dump para recuperação dos dados. Tendo as tabelas Clientes e Produtos 20, registros cada para utilização do projeto.
 
 Foi utilizado transação, para caso ocorra algum erro (como na exclusão em cascata do Pedido por exemplo), assim será dado Rollback em caso de erro e Commit caso de sucesso.
+
+Todo sistema foi construído para que possa ser utilizado não só com o mouse, mas com o teclado. Por isso foram colocados atalhos nos botões e a ordem do tab dos componentes está correta, para que o usuário possa utilizá-lo (se assim quiser) 100% pelo teclado.

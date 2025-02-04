@@ -34,7 +34,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       Height = 83
       GroupIndex = 1
       Down = True
-      Caption = 'Novo Pedido'
+      Caption = '&Novo Pedido'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -49,7 +49,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       Width = 129
       Height = 84
       GroupIndex = 1
-      Caption = 'Ver Pedidos'
+      Caption = '&Ver Pedidos'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -64,7 +64,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
       Top = 7
       Width = 129
       Height = 84
-      Caption = 'Cancelar Pedido'
+      Caption = '&Cancelar Pedido'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -604,6 +604,7 @@ object FrmPedidoVenda: TFrmPedidoVenda
             TitleFont.Name = 'Segoe UI'
             TitleFont.Style = []
             OnKeyDown = grdItensPedidoKeyDown
+            OnKeyPress = grdItensPedidoKeyPress
             Columns = <
               item
                 Expanded = False
