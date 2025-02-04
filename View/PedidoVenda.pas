@@ -46,6 +46,8 @@ type
     cdsItensPedidoValorTotal: TCurrencyField;
     lblPedidoTitulo: TLabel;
     lblNumeroPedidoValor: TLabel;
+    lblDataEmissao: TLabel;
+    lblEmitidoEm: TLabel;
     procedure btnAdicionarEditarItemClick(Sender: TObject);
     procedure btnPesquisarClienteClick(Sender: TObject);
     procedure edtCodigoClienteExit(Sender: TObject);
@@ -246,6 +248,9 @@ begin
     LimparDadosDaTela();
     lblPedidoTitulo.Visible := False;
     lblNumeroPedidoValor.Visible := False;
+
+    lblEmitidoEm.Visible := False;
+    lblDataEmissao.Visible := False;
   end;
 end;
 
@@ -371,7 +376,10 @@ begin
       begin
         lblPedidoTitulo.Visible := True;
         lblNumeroPedidoValor.Visible := True;
+        lblEmitidoEm.Visible := True;
+        lblDataEmissao.Visible := True;
         lblNumeroPedidoValor.Caption := IntToStr(lPedidoSelecionado.NumeroPedido);
+        lblDataEmissao.Caption := FormatDateTime('dd/mm/yyyy', lPedidoSelecionado.DataEmissao);
         FClienteSelecionado.Codigo := lPedidoSelecionado.Cliente.Codigo;
         FClienteSelecionado.Nome := lPedidoSelecionado.Cliente.Nome;
         FClienteSelecionado.Cidade := lPedidoSelecionado.Cliente.Cidade;

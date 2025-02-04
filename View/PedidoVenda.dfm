@@ -74,30 +74,60 @@ object FrmPedidoVenda: TFrmPedidoVenda
       OnClick = btnCancelarPedidoClick
     end
     object lblPedidoTitulo: TLabel
-      Left = 761
-      Top = 18
-      Width = 153
-      Height = 45
+      Left = 707
+      Top = 13
+      Width = 128
+      Height = 37
       Anchors = [akTop, akRight]
       Caption = 'Pedido N'#186':'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -32
+      Font.Height = -27
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
       Visible = False
     end
     object lblNumeroPedidoValor: TLabel
-      Left = 922
-      Top = 18
-      Width = 17
-      Height = 45
+      Left = 841
+      Top = 13
+      Width = 15
+      Height = 37
       Anchors = [akTop, akRight]
       Caption = '0'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -32
+      Font.Height = -27
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      Visible = False
+    end
+    object lblDataEmissao: TLabel
+      Left = 841
+      Top = 56
+      Width = 142
+      Height = 37
+      Anchors = [akTop, akRight]
+      Caption = '03/02/2025'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -27
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      Visible = False
+    end
+    object lblEmitidoEm: TLabel
+      Left = 693
+      Top = 56
+      Width = 142
+      Height = 37
+      Anchors = [akTop, akRight]
+      Caption = 'Emitido em:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -27
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
