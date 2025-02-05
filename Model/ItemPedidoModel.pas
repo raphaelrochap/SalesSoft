@@ -22,7 +22,7 @@ type
     property ValorUnitario: Double read FValorUnitario write FValorUnitario;
     property ValorTotal: Double read FValorTotal write FValorTotal;
 
-    class function GetById(pCodigo: Integer): TArray<TItemPedidoModel>;
+    class function GetById(pNumeroPedido: Integer): TArray<TItemPedidoModel>;
 
     function Remover(): Boolean;
     function Salvar(): Boolean;
@@ -57,20 +57,20 @@ begin
       Self.Quantidade,
       StringReplace(FloatToStr(Self.ValorUnitario), ',', '.', [rfReplaceAll]),
       StringReplace(FloatToStr(Self.ValorTotal), ',', '.', [rfReplaceAll])
-    ]));
+    ]), 'Erro ao inserir Item do Pedido.');
 end;
 
-class function TItemPedidoModel.GetById(pCodigo: Integer): TArray<TItemPedidoModel>;
+class function TItemPedidoModel.GetById(pNumeroPedido: Integer): TArray<TItemPedidoModel>;
 const
    QUERY = 'SELECT ' +
            '  PEDIDOITENS.ID, ' +
-           '    PEDIDOITENS.NUMERO_PEDIDO, ' +
-           '    PEDIDOITENS.CODIGO_PRODUTO, ' +
-           '    PRODUTOS.DESCRICAO AS DESCRICAO_PRODUTO, ' +
-           '    PRODUTOS.PRECO_VENDA, ' +
-           '    PEDIDOITENS.QUANTIDADE, ' +
-           '    PEDIDOITENS.VALOR_UNITARIO, ' +
-           '    PEDIDOITENS.VALOR_TOTAL ' +
+           '  PEDIDOITENS.NUMERO_PEDIDO, ' +
+           '  PEDIDOITENS.CODIGO_PRODUTO, ' +
+           '  PRODUTOS.DESCRICAO AS DESCRICAO_PRODUTO, ' +
+           '  PRODUTOS.PRECO_VENDA, ' +
+           '  PEDIDOITENS.QUANTIDADE, ' +
+           '  PEDIDOITENS.VALOR_UNITARIO, ' +
+           '  PEDIDOITENS.VALOR_TOTAL ' +
            'FROM ' +
            '  PEDIDOITENS ' +
            'INNER JOIN ' +
@@ -83,7 +83,7 @@ var
 begin
   lIndex := 0;
   SetLength(Result, lIndex);
-  lQueryPedido := Open(Format(QUERY, [pCodigo]));
+  lQueryPedido := Open(Format(QUERY, [pNumeroPedido]), 'Erro ao obter os Itens do Pedido de Código: ' + IntToStr(pNumeroPedido) + '.');
   lQueryPedido.First();
   while not lQueryPedido.Eof do
   begin
@@ -108,7 +108,7 @@ function TItemPedidoModel.Remover(): Boolean;
 const
   CONSULTA = 'DELETE FROM PEDIDOITENS WHERE ID = %d';
 begin
-  Result := ExecSQL(Format(CONSULTA, [Self.Id]));
+  Result := ExecSQL(Format(CONSULTA, [Self.FId]), 'Erro ao remover Item do Pedido. ID: ' + IntToStr(Self.FId) + '.');
 end;
 
 end.

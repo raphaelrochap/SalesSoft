@@ -65,7 +65,7 @@ const
 var
   lQuery: TFDQuery;
 begin
-  lQuery := TPedidoModel.Open(CONSULTA);
+  lQuery := TPedidoModel.Open(CONSULTA, 'Erro ao obter último ID inserido na tabela de Pedidos.');
   try
     Result := lQuery.fields.FieldByName('CODIGO').AsInteger;
   finally

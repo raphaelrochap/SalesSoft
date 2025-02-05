@@ -34,23 +34,7 @@ class function TProdutoModel.GetAll(): TFDQuery;
 const
    QUERY = 'SELECT CODIGO as ''Código'', DESCRICAO as ''Descrição'' FROM PRODUTOS';
 begin
-  Result := TFDQuery.Create(nil);
-  try
-    try
-      FConexaoMySQLDAO.StartTransaction();
-      Result.Connection := FConexaoMySQLDAO.FConexaoPrincipal;
-      Result.SQL.Add(QUERY);
-      Result.Open();
-    except
-      on E: Exception do
-      begin
-        FConexaoMySQLDAO.Rollback();
-        MessageDlg('Erro: ' + E.Message, mtError, [mbOK], 0);
-      end;
-    end;
-  finally
-    FConexaoMySQLDAO.Commit();
-  end;
+  Result := Open(QUERY, 'Erro ao obter todos os Produtos.');
 end;
 
 class function TProdutoModel.GetById(pCodigo: Integer): TProdutoModel;
@@ -59,7 +43,7 @@ const
 var
   lQuery: TFDQuery;
 begin
-  lQuery := Open(Format(QUERY, [pCodigo]));
+  lQuery := Open(Format(QUERY, [pCodigo]), 'Erro ao obter o Produto de Código: ' + IntToStr(pCodigo) + '.');
   try
     Result := TProdutoModel.Create();
     Result.Codigo := lQuery.Fields.FieldByName('CODIGO').AsInteger;

@@ -1,4 +1,4 @@
-unit ConexaoMySQLDAO;
+ï»¿unit ConexaoMySQLDAO;
 
 interface
 
@@ -63,8 +63,7 @@ end;
 
 procedure TConexaoMySQLDAO.Rollback(pExibirMensagem: Boolean = True; pMessage: String = '');
 begin
-  if pMessage = '' then
-    pMessage := 'Houve um problema com sua última transação de dados, por favor verifique sua conexão com o Banco de Dados e tente novamente';
+    pMessage := pMessage + ' Por favor verifique sua conexÃ£o com o Banco de Dados e tente novamente.';
 
   if pExibirMensagem then
     MessageDlg(pMessage, mtInformation, [mbOk], 0);
@@ -93,7 +92,7 @@ begin
   except
     on E: Exception do
     begin
-      MessageDlg('Não foi possível realizar a conexão com a base de Dados:' + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Detalhes:' + E.Message, mtInformation, [mbOK], 0);
+      MessageDlg('NÃ£o foi possÃ­vel realizar a conexÃ£o com a base de Dados:' + TSalesSoftUtils.CRLF + TSalesSoftUtils.CRLF + 'Detalhes:' + E.Message, mtInformation, [mbOK], 0);
     end;
   end;
 end;

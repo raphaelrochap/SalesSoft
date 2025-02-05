@@ -8,13 +8,13 @@ uses
 type
   TBaseModel = class
   public
-    class function Open(pQuery: String): TFDQuery;
-    class function ExecSQL(pQuery: String): Boolean;
+    class function Open(pQuery: String; pMensagemErro: String): TFDQuery;
+    class function ExecSQL(pQuery: String; pMensagemErro: String): Boolean;
   end;
 
 implementation
 
-class function TBaseModel.Open(pQuery: String): TFDQuery;
+class function TBaseModel.Open(pQuery: String; pMensagemErro: String): TFDQuery;
 begin
   Result := TFDQuery.Create(nil);
   try
@@ -24,13 +24,13 @@ begin
   except
     on E: Exception do
     begin
-      FConexaoMySQLDAO.Rollback();
+      FConexaoMySQLDAO.Rollback(True, pMensagemErro);
       MessageDlg('Erro: ' + E.Message, mtError, [mbOK], 0);
     end;
   end;
 end;
 
-class function TBaseModel.ExecSQL(pQuery: String): Boolean;
+class function TBaseModel.ExecSQL(pQuery: String; pMensagemErro: String): Boolean;
 var
   lQuery: TFDQuery;
 begin
@@ -43,7 +43,7 @@ begin
       lQuery.ExecSQL();
       Result := (lQuery.RowsAffected = 1);
     except on E: Exception do
-        FConexaoMySQLDAO.Rollback();
+        FConexaoMySQLDAO.Rollback(True, pMensagemErro);
     end;
   finally
     lQuery.Free();

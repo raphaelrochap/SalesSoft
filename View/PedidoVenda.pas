@@ -83,7 +83,7 @@ type
     procedure IniciarNovoPedido();
     procedure LimparDadosDaTela();
     function GravarPedidoERetornarID(): Integer;
-    function GravarItensDoPedido(pCodigoPedido: Integer): Boolean;
+    function ItemDoPedidoGavado(pCodigoPedido: Integer): Boolean;
     function CamposValidos(): Boolean;
   public
     property NovoPedido: Boolean read FNovoPedido write SetNovoPedido;
@@ -214,7 +214,7 @@ begin
   end;
 end;
 
-function TFrmPedidoVenda.GravarItensDoPedido(pCodigoPedido: Integer): Boolean;
+function TFrmPedidoVenda.ItemDoPedidoGavado(pCodigoPedido: Integer): Boolean;
 var
   lItemPedidoController: TItemPedidoController;
 begin
@@ -234,7 +234,6 @@ end;
 
 procedure TFrmPedidoVenda.btnGravarPedidoClick(Sender: TObject);
 const
-  MENSAGEM_ERRO = 'Houve um erro ao gravar os pedidos, verifique sua conexão com o Banco de Dados e tente novamente.';
   MENSAGEM_SUCESSO = 'Pedido gravado com sucesso!';
 var
   lCodigoPedido: Integer;
@@ -251,15 +250,18 @@ begin
 
   if lCodigoPedido = -1 then
   begin
-    FConexaoMySQLDAO.Rollback();
-    MessageDlg(MENSAGEM_ERRO, mtInformation, [mbOK], 0);
+    FConexaoMySQLDAO.Rollback(False);
     Exit;
   end;
 
   cdsItensPedido.First();
   while not cdsItensPedido.Eof do
   begin
-    GravarItensDoPedido(lCodigoPedido);
+    if not ItemDoPedidoGavado(lCodigoPedido) then
+    begin
+      FConexaoMySQLDAO.Rollback(False);
+      Exit;
+    end;
     cdsItensPedido.Next();
   end;
 

@@ -37,7 +37,7 @@ class function TClienteModel.GetAll(): TFDQuery;
 const
    QUERY = 'SELECT CODIGO AS ''Código'', NOME AS ''Nome'' FROM CLIENTES';
 begin
-  Result := Open(QUERY);
+  Result := Open(QUERY, 'Erro ao obter todos os Clientes.');
 end;
 
 class function TClienteModel.GetById(pCodigo: Integer): TClienteModel;
@@ -46,7 +46,7 @@ const
 var
   lQuery: TFDQuery;
 begin
-  lQuery := Open(Format(QUERY, [pCodigo]));
+  lQuery := Open(Format(QUERY, [pCodigo]), 'Erro ao obter o Cliente de Código: ' + IntToStr(pCodigo) + '.');
   try
     Result := TClienteModel.Create();
     Result.Codigo := lQuery.Fields.FieldByName('CODIGO').AsInteger;

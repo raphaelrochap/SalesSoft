@@ -69,7 +69,7 @@ begin
       Self.FCliente.Codigo,
       FormatDateTime('yyyy-mm-dd hh:nn:ss', Self.FDataEmissao),
       StringReplace(FloatToStr(ValorTotal), ',', '.', [rfReplaceAll])
-    ]));
+    ]), 'Erro ao Salvar Pedido.');
 end;
 
 class function TPedidoModel.GetAll(): TFDQuery;
@@ -121,7 +121,7 @@ const
 var
   lQueryPedido: TFDQuery;
 begin
-  lQueryPedido := Open(Format(QUERY, [pCodigo]));
+  lQueryPedido := Open(Format(QUERY, [pCodigo]), 'Erro ao obter o Pedido de Código: ' + IntToStr(pCodigo) + '.');
   try
     Result := TPedidoModel.Create();
     Result.NumeroPedido := lQueryPedido.Fields.FieldByName('Número do Pedido').AsInteger;
@@ -137,7 +137,7 @@ function TPedidoModel.Remover(): Boolean;
 const
   CONSULTA = 'DELETE FROM PEDIDOS WHERE NUMERO_PEDIDO = %d';
 begin
-  Result := ExecSQL(Format(CONSULTA, [Self.FNumeroPedido]));
+  Result := ExecSQL(Format(CONSULTA, [Self.FNumeroPedido]), 'Erro ao remover Pedido. Numer do Pedido: ' + IntToStr(Self.FNumeroPedido) + '.');
 end;
 
 end.
