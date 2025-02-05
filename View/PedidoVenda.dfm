@@ -686,6 +686,8 @@ object FrmPedidoVenda: TFrmPedidoVenda
     IndexDefs = <>
     Params = <>
     StoreDefs = True
+    AfterPost = cdsItensPedidoAfterPost
+    AfterDelete = cdsItensPedidoAfterDelete
     Left = 142
     Top = 433
     object cdsItensPedidoCodigo: TIntegerField

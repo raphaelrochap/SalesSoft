@@ -63,6 +63,8 @@ type
     procedure btnNovoPedidoClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure grdItensPedidoKeyPress(Sender: TObject; var Key: Char);
+    procedure cdsItensPedidoAfterPost(DataSet: TDataSet);
+    procedure cdsItensPedidoAfterDelete(DataSet: TDataSet);
   private
     FTotal: Double;
     FNovoPedido: Boolean;
@@ -129,6 +131,16 @@ begin
   end;
 end;
 
+procedure TFrmPedidoVenda.cdsItensPedidoAfterDelete(DataSet: TDataSet);
+begin
+  AtualizarPrecoTotal();
+end;
+
+procedure TFrmPedidoVenda.cdsItensPedidoAfterPost(DataSet: TDataSet);
+begin
+  AtualizarPrecoTotal();
+end;
+
 procedure TFrmPedidoVenda.btnAdicionarEditarItemClick(Sender: TObject);
 begin
   if not CamposValidos() then
@@ -155,7 +167,6 @@ begin
 
   cdsItensPedido.Post();
 
-  AtualizarPrecoTotal();
   LimparDadosProduto();
   btnAdicionarEditarItem.Glyph.LoadFromResourceName(HInstance, 'ADDICON');
 end;
@@ -447,7 +458,6 @@ begin
     cdsItensPedidoValorTotal.Value := pItensDoPedido[I].ValorTotal;
     cdsItensPedido.Post();
   end;
-  AtualizarPrecoTotal();
 end;
 
 procedure TFrmPedidoVenda.edtCodigoClienteExit(Sender: TObject);
@@ -635,7 +645,6 @@ procedure TFrmPedidoVenda.grdItensPedidoKeyDown(Sender: TObject; var Key: Word; 
 begin
   ValidaRemocaoDeItemDoCarrinho(Key);
   ValidaEdicaoDeItemDoCarrinho(Key);
-  AtualizarPrecoTotal();
 end;
 
 procedure TFrmPedidoVenda.grdItensPedidoKeyPress(Sender: TObject; var Key: Char);
