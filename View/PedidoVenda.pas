@@ -633,6 +633,7 @@ procedure TFrmPedidoVenda.grdItensPedidoKeyDown(Sender: TObject; var Key: Word; 
 begin
   ValidaRemocaoDeItemDoCarrinho(Key);
   ValidaEdicaoDeItemDoCarrinho(Key);
+  AtualizarPrecoTotal();
 end;
 
 procedure TFrmPedidoVenda.grdItensPedidoKeyPress(Sender: TObject; var Key: Char);
