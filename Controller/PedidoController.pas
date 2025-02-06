@@ -1,4 +1,4 @@
-unit PedidoController;
+﻿unit PedidoController;
 
 interface
 
@@ -50,7 +50,9 @@ begin
 
     if (pCodigo <> -1) then
     begin
+      Result.Free();
       Result := TPedidoModel.GetById(pCodigo);
+      Result.Cliente.Free();
       Result.Cliente := lClienteController.GetById(Result.Cliente.Codigo);
       Result.Itens := TItemPedidoController.GetById(pCodigo);
     end;

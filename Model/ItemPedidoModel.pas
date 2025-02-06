@@ -1,4 +1,4 @@
-unit ItemPedidoModel;
+﻿unit ItemPedidoModel;
 
 interface
 
@@ -84,23 +84,27 @@ begin
   lIndex := 0;
   SetLength(Result, lIndex);
   lQueryPedido := Open(Format(QUERY, [pNumeroPedido]), 'Erro ao obter os Itens do Pedido de Código: ' + IntToStr(pNumeroPedido) + '.');
-  lQueryPedido.First();
-  while not lQueryPedido.Eof do
-  begin
-    lIndex := Length(Result);
-    SetLength(Result, lIndex + 1);
-    Result[lIndex] := TItemPedidoModel.Create();
+  try
+    lQueryPedido.First();
+    while not lQueryPedido.Eof do
+    begin
+      lIndex := Length(Result);
+      SetLength(Result, lIndex + 1);
+      Result[lIndex] := TItemPedidoModel.Create();
 
-    Result[lIndex].Id := lQueryPedido.Fields.FieldByName('ID').AsInteger;
-    Result[lIndex].NumeroPedido := lQueryPedido.Fields.FieldByName('NUMERO_PEDIDO').AsInteger;
-    Result[lIndex].Produto.Codigo := lQueryPedido.Fields.FieldByName('CODIGO_PRODUTO').AsInteger;
-    Result[lIndex].Produto.Descricao := lQueryPedido.Fields.FieldByName('DESCRICAO_PRODUTO').AsString;
-    Result[lIndex].Produto.PrecoVenda := lQueryPedido.Fields.FieldByName('PRECO_VENDA').AsInteger;
-    Result[lIndex].Quantidade := lQueryPedido.Fields.FieldByName('QUANTIDADE').AsInteger;
-    Result[lIndex].ValorUnitario := lQueryPedido.Fields.FieldByName('VALOR_UNITARIO').AsFloat;
-    Result[lIndex].ValorTotal := lQueryPedido.Fields.FieldByName('VALOR_TOTAL').AsFloat;
+      Result[lIndex].Id := lQueryPedido.Fields.FieldByName('ID').AsInteger;
+      Result[lIndex].NumeroPedido := lQueryPedido.Fields.FieldByName('NUMERO_PEDIDO').AsInteger;
+      Result[lIndex].Produto.Codigo := lQueryPedido.Fields.FieldByName('CODIGO_PRODUTO').AsInteger;
+      Result[lIndex].Produto.Descricao := lQueryPedido.Fields.FieldByName('DESCRICAO_PRODUTO').AsString;
+      Result[lIndex].Produto.PrecoVenda := lQueryPedido.Fields.FieldByName('PRECO_VENDA').AsInteger;
+      Result[lIndex].Quantidade := lQueryPedido.Fields.FieldByName('QUANTIDADE').AsInteger;
+      Result[lIndex].ValorUnitario := lQueryPedido.Fields.FieldByName('VALOR_UNITARIO').AsFloat;
+      Result[lIndex].ValorTotal := lQueryPedido.Fields.FieldByName('VALOR_TOTAL').AsFloat;
 
-    lQueryPedido.Next();
+      lQueryPedido.Next();
+    end;
+  finally
+    lQueryPedido.Free();
   end;
 end;
 
